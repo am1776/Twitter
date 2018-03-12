@@ -4,7 +4,7 @@ import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.ViewGroup;
 
-import com.amallya.twittermvvm.network.TwitterClient;
+import com.amallya.twittermvvm.data.remote.TwitterClient;
 import com.amallya.twittermvvm.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 

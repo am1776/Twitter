@@ -1,4 +1,4 @@
-package com.amallya.twittermvvm.tweet.tweet_detail;
+package com.amallya.twittermvvm.ui.tweet_detail;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +14,7 @@ import android.widget.ToggleButton;
 
 import com.amallya.twittermvvm.R;
 import com.amallya.twittermvvm.RestApplication;
-import com.amallya.twittermvvm.network.TwitterClient;
+import com.amallya.twittermvvm.data.remote.TwitterClient;
 import com.amallya.twittermvvm.models.Tweet;
 import com.amallya.twittermvvm.utils.Consts;
 import com.amallya.twittermvvm.utils.NetworkUtils;

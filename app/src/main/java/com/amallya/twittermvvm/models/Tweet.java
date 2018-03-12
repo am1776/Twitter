@@ -1,6 +1,6 @@
 package com.amallya.twittermvvm.models;
 
-import com.amallya.twittermvvm.data.TweetsDatabase;
+import com.amallya.twittermvvm.data.local.TweetsDatabase;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

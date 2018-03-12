@@ -1,13 +1,13 @@
-package com.amallya.twittermvvm.login;
+package com.amallya.twittermvvm.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.amallya.twittermvvm.R;
-import com.amallya.twittermvvm.network.TwitterClient;
+import com.amallya.twittermvvm.data.remote.TwitterClient;
 import com.codepath.oauth.OAuthLoginActionBarActivity;
-import com.amallya.twittermvvm.tweet.MainActivity;
+import com.amallya.twittermvvm.ui.main.MainActivity;
 
 public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 

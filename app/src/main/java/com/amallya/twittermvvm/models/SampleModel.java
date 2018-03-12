@@ -1,6 +1,6 @@
 package com.amallya.twittermvvm.models;
 
-import com.amallya.twittermvvm.data.MyDatabase;
+import com.amallya.twittermvvm.data.local.MyDatabase;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;

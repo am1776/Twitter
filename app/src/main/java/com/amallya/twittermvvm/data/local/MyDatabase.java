@@ -1,4 +1,4 @@
-package com.amallya.twittermvvm.data;
+package com.amallya.twittermvvm.data.local;
 
 import com.raizlabs.android.dbflow.annotation.Database;
 

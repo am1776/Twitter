@@ -1,4 +1,4 @@
-package com.amallya.twittermvvm.tweet.tweets;
+package com.amallya.twittermvvm.ui.tweets;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,9 +18,9 @@ import com.amallya.twittermvvm.utils.EndlessRecyclerViewScrollListener;
 import com.amallya.twittermvvm.utils.ItemClickSupport;
 import com.amallya.twittermvvm.R;
 import com.amallya.twittermvvm.RestApplication;
-import com.amallya.twittermvvm.tweet.tweet_detail.TweetDetailActivity;
-import com.amallya.twittermvvm.network.TwitterClient;
-import com.amallya.twittermvvm.data.DbHelper;
+import com.amallya.twittermvvm.ui.tweet_detail.TweetDetailActivity;
+import com.amallya.twittermvvm.data.remote.TwitterClient;
+import com.amallya.twittermvvm.data.local.DbHelper;
 import com.amallya.twittermvvm.models.Entity;
 import com.amallya.twittermvvm.models.Media;
 import com.amallya.twittermvvm.models.Tweet;

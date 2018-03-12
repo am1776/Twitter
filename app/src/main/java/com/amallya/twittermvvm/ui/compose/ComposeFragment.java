@@ -1,4 +1,4 @@
-package com.amallya.twittermvvm.tweet.compose;
+package com.amallya.twittermvvm.ui.compose;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,7 +19,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.amallya.twittermvvm.R;
-import com.amallya.twittermvvm.tweet.draft.DraftActivity;
+import com.amallya.twittermvvm.ui.draft.DraftActivity;
 import com.bumptech.glide.Glide;
 
 

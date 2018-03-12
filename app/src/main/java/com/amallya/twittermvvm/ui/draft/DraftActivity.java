@@ -1,4 +1,4 @@
-package com.amallya.twittermvvm.tweet.draft;
+package com.amallya.twittermvvm.ui.draft;
 
 import android.content.Intent;
 import android.content.SharedPreferences;

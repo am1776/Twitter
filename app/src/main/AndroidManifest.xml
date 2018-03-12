@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".login.LoginActivity">
+        <activity android:name=".ui.login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -20,16 +20,16 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".tweet.tweet_detail.TweetDetailActivity"/>
+        <activity android:name=".ui.tweet_detail.TweetDetailActivity"/>
         <activity
-            android:name=".SplashActivity"
+            android:name=".ui.splash.SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".tweet.MainActivity" />
-        <activity android:name=".tweet.draft.DraftActivity"></activity>
+        <activity android:name=".ui.main.MainActivity" />
+        <activity android:name=".ui.draft.DraftActivity"></activity>
     </application>
 </manifest>

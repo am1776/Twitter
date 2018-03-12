@@ -6,7 +6,7 @@ import android.content.Context;
 import com.amallya.twittermvvm.models.User;
 
 
-import com.amallya.twittermvvm.network.TwitterClient;
+import com.amallya.twittermvvm.data.remote.TwitterClient;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowLog;
 import com.raizlabs.android.dbflow.config.FlowManager;

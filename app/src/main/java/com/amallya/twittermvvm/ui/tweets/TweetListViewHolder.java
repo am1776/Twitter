@@ -1,4 +1,4 @@
-package com.amallya.twittermvvm.tweet.tweets;
+package com.amallya.twittermvvm.ui.tweets;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

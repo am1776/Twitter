@@ -1,4 +1,4 @@
-package com.amallya.twittermvvm.tweet.tweets;
+package com.amallya.twittermvvm.ui.tweets;
 
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
@@ -10,13 +10,13 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import com.amallya.twittermvvm.tweet.compose.ComposeFragment;
+import com.amallya.twittermvvm.ui.compose.ComposeFragment;
 import com.amallya.twittermvvm.utils.Consts;
 import com.amallya.twittermvvm.utils.NetworkUtils;
 import com.amallya.twittermvvm.utils.PatternEditableBuilder;
 import com.amallya.twittermvvm.R;
 import com.amallya.twittermvvm.RestApplication;
-import com.amallya.twittermvvm.network.TwitterClient;
+import com.amallya.twittermvvm.data.remote.TwitterClient;
 import com.amallya.twittermvvm.utils.Utils;
 import com.amallya.twittermvvm.models.Tweet;
 import com.amallya.twittermvvm.models.User;

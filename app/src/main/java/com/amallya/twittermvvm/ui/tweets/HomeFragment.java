@@ -1,11 +1,10 @@
-package com.amallya.twittermvvm.tweet.tweets;
+package com.amallya.twittermvvm.ui.tweets;
 
 import android.os.Bundle;
 
 import com.amallya.twittermvvm.models.Entity;
 import com.amallya.twittermvvm.models.Tweet;
 import com.amallya.twittermvvm.models.User;
-import com.amallya.twittermvvm.tweet.tweets.TweetsFragment;
 import com.amallya.twittermvvm.utils.Consts;
 import com.loopj.android.http.JsonHttpResponseHandler;
 

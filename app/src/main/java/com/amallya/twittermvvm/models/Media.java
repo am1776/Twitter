@@ -1,6 +1,6 @@
 package com.amallya.twittermvvm.models;
 
-import com.amallya.twittermvvm.data.TweetsDatabase;
+import com.amallya.twittermvvm.data.local.TweetsDatabase;
 import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;

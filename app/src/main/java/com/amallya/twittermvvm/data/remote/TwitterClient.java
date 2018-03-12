@@ -1,4 +1,4 @@
-package com.amallya.twittermvvm.network;
+package com.amallya.twittermvvm.data.remote;
 
 import android.content.Context;
 
@@ -16,7 +16,6 @@ import org.scribe.builder.api.TwitterApi;
 /**
  * Created by anmallya on 3/10/2018.
  */
-
 
 public class TwitterClient extends OAuthBaseClient {
     public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class;

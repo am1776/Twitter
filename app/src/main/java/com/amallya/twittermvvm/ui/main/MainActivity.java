@@ -1,4 +1,4 @@
-package com.amallya.twittermvvm.tweet;
+package com.amallya.twittermvvm.ui.main;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,7 +10,6 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -23,15 +22,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.amallya.twittermvvm.tweet.tweets.HomeFragment;
-import com.amallya.twittermvvm.tweet.tweets.TweetsAdapter;
+import com.amallya.twittermvvm.ui.tweets.HomeFragment;
+import com.amallya.twittermvvm.ui.tweets.TweetsAdapter;
 import com.amallya.twittermvvm.utils.CircularTransform;
-import com.amallya.twittermvvm.tweet.compose.ComposeFragment;
+import com.amallya.twittermvvm.ui.compose.ComposeFragment;
 import com.amallya.twittermvvm.utils.NetworkUtils;
 import com.amallya.twittermvvm.R;
 import com.amallya.twittermvvm.RestApplication;
-import com.amallya.twittermvvm.network.TwitterClient;
-import com.amallya.twittermvvm.data.DbHelper;
+import com.amallya.twittermvvm.data.remote.TwitterClient;
+import com.amallya.twittermvvm.data.local.DbHelper;
 import com.amallya.twittermvvm.models.Entity;
 import com.amallya.twittermvvm.models.Media;
 import com.amallya.twittermvvm.models.Tweet;
@@ -89,7 +88,7 @@ public class MainActivity extends AppCompatActivity
         relativeLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Home");
+        getSupportActionBar().setTitle(R.string.home);
     }
 
     private void setDrawerViews(){
