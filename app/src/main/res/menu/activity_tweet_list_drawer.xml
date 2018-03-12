@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/ic_unfollow"
+        android:title="Profile" />
+    <item
+        android:id="@+id/nav_highlights"
+        android:icon="@drawable/ic_menu_gallery"
+        android:title="Highlights" />
+    <item
+        android:id="@+id/nav_moments"
+        android:icon="@drawable/ic_tab_moments_black"
+        android:title="My Moments" />
+    <item
+        android:id="@+id/nav_lists"
+        android:icon="@drawable/ic_lists"
+        android:title="Lists" />
+
+    <item
+        android:id="@+id/nav_connect"
+        android:icon="@drawable/ic_follow_black"
+        android:title="Connect" />
+
+</group>
+
+
+<item android:title="Additional">
+    <menu>
+    <item
+        android:id="@+id/nav_night_mode"
+        android:title="Night Mode" />
+    <item
+        android:id="@+id/nav_settings"
+        android:title="Settings" />
+    <item
+        android:id="@+id/nav_sign_out"
+        android:title="Sign out" />
+</menu>
+    </item>
+
+</menu>
