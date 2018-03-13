@@ -1,7 +1,6 @@
 package com.amallya.twittermvvm.models;
 
 import com.google.gson.annotations.SerializedName;
-
 import org.parceler.Parcel;
 
 /**

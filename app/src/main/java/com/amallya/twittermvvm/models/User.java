@@ -7,11 +7,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.structure.BaseModel;
-
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
@@ -19,15 +14,11 @@ import java.util.ArrayList;
 
 
 @Parcel
-@Table(database = TweetsDatabase.class)
-public class User extends BaseModel {
+public class User {
 
-    @Column
     @SerializedName("screen_name")
-    @PrimaryKey
     private String screenName; // screen_name
 
-    @Column
     @SerializedName("name")
     private String name;
 
@@ -39,56 +30,42 @@ public class User extends BaseModel {
         isFollowing = following;
     }
 
-    @Column
     @SerializedName("following")
     private boolean isFollowing;
 
-
-    @Column
     @SerializedName("description")
     private String description; // description
 
-    @Column
     @SerializedName("url")
     private String url; // url
 
-    @Column
     @SerializedName("followers_count")
     private long followersCount; //followers_count
 
-    @Column
     @SerializedName("friends_count")
     private long friendsCount; // friends_count
 
-    @Column
     @SerializedName("listed_count")
     private long listedCount; //listed_count
 
-    @Column
     @SerializedName("favourites_count")
     private long favoritesCount; // favourites_count
 
-    @Column
     @SerializedName("verified")
     private boolean verified; // verified
 
-    @Column
     @SerializedName("statuses_count")
     private long statusesCount; // statuses_count
 
-    @Column
     @SerializedName("profile_background_image_url")
     private String profileBackgroundImageUrl;  //profile_background_image_url
 
-    @Column
     @SerializedName("profile_background_color")
     private String profileBackgroundColor; // profile_background_color
 
-    @Column
     @SerializedName("profile_image_url_https")
     private String profileImageUrl; // profile_image_url_https
 
-    @Column
     @SerializedName("profile_banner_url")
     private String bannerUrl; // banner_url
 

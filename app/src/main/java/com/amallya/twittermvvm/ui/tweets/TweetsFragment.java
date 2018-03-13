@@ -24,7 +24,6 @@ import com.amallya.twittermvvm.data.local.DbHelper;
 import com.amallya.twittermvvm.models.Entity;
 import com.amallya.twittermvvm.models.Media;
 import com.amallya.twittermvvm.models.Tweet;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONArray;
@@ -115,12 +114,12 @@ public abstract class TweetsFragment extends Fragment {
                     if (entities.getMedia().size() > 0) {
                         for (Media media : entities.getMedia()) {
                             media.setTweetId(tweet.getId());
-                            media.save();
+                            //media.save();
                         }
                     }
                 }
-                tweet.getUser().save();
-                tweet.save();
+                //tweet.getUser().save();
+                //tweet.save();
             }
         }
         if (tweetListNew.size() > 0){
@@ -131,7 +130,7 @@ public abstract class TweetsFragment extends Fragment {
 
 
     protected void noInternet(){
-        System.out.println("No internet connection");
+     /*   System.out.println("No internet connection");
         if(relativeLayout == null){
             return;
         }
@@ -148,7 +147,7 @@ public abstract class TweetsFragment extends Fragment {
             t.getEntities().setMedia(mediaList);
         }
         tweetList.addAll(tweetListDb);
-        tweetsAdapter.notifyDataSetChanged();
+        tweetsAdapter.notifyDataSetChanged();*/
     }
 
     private void setRecyclerView(){

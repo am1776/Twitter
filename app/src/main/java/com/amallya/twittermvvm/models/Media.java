@@ -2,19 +2,13 @@ package com.amallya.twittermvvm.models;
 
 import com.amallya.twittermvvm.data.local.TweetsDatabase;
 import com.google.gson.annotations.SerializedName;
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.structure.BaseModel;
-
 import org.parceler.Parcel;
 
 /**
  * Created by anmallya on 10/29/2016.
  */
 @Parcel
-@Table(database = TweetsDatabase.class)
-public class Media extends BaseModel{
+public class Media{
 
     public String getType() {
         return type;
@@ -32,20 +26,14 @@ public class Media extends BaseModel{
         this.tweetId = tweetId;
     }
 
-    @Column
     private long tweetId;
 
-
-    @Column
     @SerializedName("type")
     private String type;
 
-    @Column
-    @PrimaryKey
     @SerializedName("id")
     private String id;
 
-    @Column
     @SerializedName("media_url")
     private String mediaUrl;
 

@@ -1,16 +1,10 @@
 package com.amallya.twittermvvm.models;
 
-import com.amallya.twittermvvm.data.local.TweetsDatabase;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ForeignKey;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,8 +14,7 @@ import org.parceler.Parcel;
 import java.util.ArrayList;
 
 @Parcel
-@Table(database = TweetsDatabase.class)
-public class Tweet extends BaseModel {
+public class Tweet  {
 
     private DisplayType displayType = DisplayType.NORMAL;
 
@@ -33,28 +26,21 @@ public class Tweet extends BaseModel {
         this.displayType = displayType;
     }
 
-    @Column
     @SerializedName("created_at")
     private String createdAt;
 
     @SerializedName("id_str")
     private String idStr;
 
-    @Column
-    @PrimaryKey
     @SerializedName("id")
     private long id;
 
-    @Column
     @SerializedName("text")
     private String text;
 
-    @Column
-    @ForeignKey(saveForeignKeyModel = false)
     @SerializedName("user")
     private User user;
 
-    @Column
     @SerializedName("retweet_count")
     private int retweetCount;
 
@@ -66,15 +52,12 @@ public class Tweet extends BaseModel {
         this.favouritesCount = favouritesCount;
     }
 
-    @Column
     @SerializedName("favorite_count")
     private int favouritesCount;
 
-    @Column
     @SerializedName("favorited")
     private boolean favorited;
 
-    @Column
     @SerializedName("retweeted")
     private boolean retweeted;
 
