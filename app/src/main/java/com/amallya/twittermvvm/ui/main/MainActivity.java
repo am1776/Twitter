@@ -18,20 +18,18 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.amallya.twittermvvm.ui.tweets.HomeFragment;
+import com.amallya.twittermvvm.ui.tweets.TweetsFragment;
 import com.amallya.twittermvvm.utils.CircularTransform;
 import com.amallya.twittermvvm.ui.compose.ComposeFragment;
 import com.amallya.twittermvvm.utils.NetworkUtils;
 import com.amallya.twittermvvm.R;
 import com.amallya.twittermvvm.RestApplication;
-import com.amallya.twittermvvm.data.remote.TwitterClient;
 import com.amallya.twittermvvm.models.User;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -40,7 +38,6 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 
 
 public class MainActivity extends AppCompatActivity
@@ -55,8 +52,6 @@ implements NavigationView.OnNavigationItemSelectedListener, ComposeFragment.OnPo
     ImageView ivNavHeader;
     LinearLayout lvNavHeader;
     private ComposeFragment composeDialog;
-    private TwitterClient client;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,13 +60,9 @@ implements NavigationView.OnNavigationItemSelectedListener, ComposeFragment.OnPo
         ButterKnife.bind(this);
         setViews();
         setupFragment(savedInstanceState);
-        client = RestApplication.getRestClient();
-
         final MainViewModel viewModel =
                 ViewModelProviders.of(this).get(MainViewModel.class);
-
         observeViewModel(viewModel);
-        //getUserCred();
     }
 
     private void observeViewModel(MainViewModel mainViewModel){
@@ -87,7 +78,7 @@ implements NavigationView.OnNavigationItemSelectedListener, ComposeFragment.OnPo
 
     private void setupFragment(Bundle savedInstanceState){
         if(savedInstanceState == null){
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame, new HomeFragment(), "TAG").commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame, new TweetsFragment(), "TAG").commit();
         }
     }
 
@@ -137,7 +128,6 @@ implements NavigationView.OnNavigationItemSelectedListener, ComposeFragment.OnPo
         });
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         System.out.println("result recieved "+requestCode+" "+resultCode);
@@ -151,7 +141,6 @@ implements NavigationView.OnNavigationItemSelectedListener, ComposeFragment.OnPo
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -164,7 +153,7 @@ implements NavigationView.OnNavigationItemSelectedListener, ComposeFragment.OnPo
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_sign_out) {
-            client.clearAccessToken();
+            RestApplication.getRestClient().clearAccessToken();
             finish();
         }
         drawer.closeDrawer(GravityCompat.START);
@@ -175,11 +164,11 @@ implements NavigationView.OnNavigationItemSelectedListener, ComposeFragment.OnPo
     private void showComposeDialog() {
         FragmentManager fm = getSupportFragmentManager();
         composeDialog = ComposeFragment.newInstance(RestApplication.getUser().getProfileImageUrl(), null);
-        composeDialog.show(fm, "fragment_alert");
+        composeDialog.show(fm, getString(R.string.compose_dialog));
     }
 
     public void onTweetPosted(String newTweet){
-        NetworkUtils.postTweets(client, newTweet, drawer);
+        NetworkUtils.postTweets(RestApplication.getRestClient(), newTweet, drawer);
         //HomeFragment fragment = (HomeFragment)((CustomFragmentPagerAdapter)viewPager.getAdapter()).getRegisteredFragment(0);
         //fragment.postTweet(newTweet, loggedInUser);
     }

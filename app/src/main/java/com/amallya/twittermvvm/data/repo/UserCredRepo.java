@@ -3,7 +3,6 @@ package com.amallya.twittermvvm.data.repo;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
-
 import com.amallya.twittermvvm.RestApplication;
 import com.amallya.twittermvvm.data.remote.TwitterClient;
 import com.amallya.twittermvvm.models.User;
@@ -12,9 +11,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.loopj.android.http.JsonHttpResponseHandler;
-
 import org.json.JSONObject;
-
 import cz.msebera.android.httpclient.Header;
 
 /**
