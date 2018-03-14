@@ -31,16 +31,22 @@ import cz.msebera.android.httpclient.Header;
 public class TweetListRepo {
 
     private TwitterClient client;
-
-    private int max= -1;
+    final MutableLiveData<List<Tweet>> tweetList;
+    private static final int TWEET_ID_MAX_DEFAULT = -1;
+    private long maxTweetId = TWEET_ID_MAX_DEFAULT;
 
     public TweetListRepo(){
         client = RestApplication.getRestClient();
+        tweetList = new MutableLiveData<>();;
     }
 
     public LiveData<List<Tweet>> getTweets(){
-        final MutableLiveData<List<Tweet>> tweetList = new MutableLiveData<>();
-        client.getTweetTimelineList(max, new JsonHttpResponseHandler() {
+        fetchTweets();
+        return tweetList;
+    }
+
+    private void fetchTweets(){
+        client.getTweetTimelineList(maxTweetId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
                 tweetList.setValue(processTweetJson(json));
@@ -51,14 +57,26 @@ public class TweetListRepo {
                 //handleNetworkFailure(statusCode, throwable);
             }
         });
-        return tweetList;
     }
 
-    protected ArrayList<Tweet> processTweetJson(JSONArray json){
+    public void refreshTweets(){
+        maxTweetId = TWEET_ID_MAX_DEFAULT;
+        fetchTweets();
+    }
+
+    public void loadMoreTweets(){
+        fetchTweets();
+    }
+
+    private ArrayList<Tweet> processTweetJson(JSONArray json){
         ArrayList<Tweet> tweetListNew = Tweet.getTweetList(json.toString());
-        if (tweetListNew.size() > 0){
-            max = (int)tweetListNew.get(tweetListNew.size() - 1).getId();
-        }
+        updateMaxTweetId(tweetListNew);
         return tweetListNew;
+    }
+
+    private void updateMaxTweetId(ArrayList<Tweet> tweetListNew){
+        if (tweetListNew.size() > 0){
+            maxTweetId = tweetListNew.get(tweetListNew.size() - 1).getId();
+        }
     }
 }

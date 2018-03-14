@@ -41,12 +41,12 @@ public class TweetsAdapter extends
         return mContext;
     }
     private Context mContext;
-    private TwitterClient client;
+    private TweetViewModel tweetViewModel;
 
-    public TweetsAdapter(Context context, List<Tweet> tweetList, TwitterClient client) {
+    public TweetsAdapter(Context context, List<Tweet> tweetList, TweetViewModel tweetViewModel) {
         this.tweetList = tweetList;
         this.mContext = context;
-        this.client = client;
+        this.tweetViewModel = tweetViewModel;
     }
 
     @Override
@@ -69,20 +69,23 @@ public class TweetsAdapter extends
         configureViewHolder(vh1, position);
     }
 
+    private void configureViewHolder(final TweetListViewHolder vh, int position) {
+        final Tweet tweet = tweetList.get(position);
+        setButtonVisibility(tweet, vh);
+        setText(vh, tweet);
+        setToggleButton(vh, tweet);
+        setCountColor(vh, tweet);
+        setImages(vh, tweet);
+        setImageButtons(vh, tweet);
+        setToggleListners(vh, tweet);
+    }
+
     private void setText(TweetListViewHolder vh, Tweet tweet){
         vh.getTvProfileName().setText(tweet.getUser().getName());
-        vh.getTvProfileHandler().setText("@"+tweet.getUser().getScreenName());
+        vh.getTvProfileHandler().setText(getContext().getResources().getString(R.string.screen_name, tweet.getUser().getScreenName()));
         vh.getTvTweet().setText(tweet.getText());
         new PatternEditableBuilder().
                 addPattern(Pattern.compile("\\@(\\w+)"), getContext().getResources().getColor(R.color.linkBlue),
-                        new PatternEditableBuilder.SpannableClickedListener() {
-                            @Override
-                            public void onSpanClicked(String text) {
-
-                            }
-                        }).into(vh.getTvTweet());
-        new PatternEditableBuilder().
-                addPattern(Pattern.compile("\\#(\\w+)"), getContext().getResources().getColor(R.color.linkBlue),
                         new PatternEditableBuilder.SpannableClickedListener() {
                             @Override
                             public void onSpanClicked(String text) {
@@ -100,18 +103,10 @@ public class TweetsAdapter extends
     }
 
     private void setCountColor(TweetListViewHolder vh, Tweet tweet){
-        if (tweet.isFavorited()) {
-            vh.getTvLikeCount().setTextColor(getContext().getResources().getColor(R.color.favRed));
-        } else{
-            vh.getTvLikeCount().setTextColor(getContext().getResources().getColor(R.color.darkGrey));
-        }
-
-        if (tweet.isRetweeted()) {
-            vh.getTvRetweetCount().setTextColor(getContext().getResources().getColor(R.color.retweetGreen));
-        } else{
-            vh.getTvRetweetCount().setTextColor(getContext().getResources().getColor(R.color.darkGrey));
-        }
-
+        int favoriteCountTextColor = tweet.isFavorited()? getContext().getResources().getColor(R.color.favRed) : getContext().getResources().getColor(R.color.darkGrey);
+        vh.getTvLikeCount().setTextColor(favoriteCountTextColor);
+        int retweetCountTextColor = tweet.isRetweeted()? getContext().getResources().getColor(R.color.retweetGreen) : getContext().getResources().getColor(R.color.darkGrey);
+        vh.getTvRetweetCount().setTextColor(retweetCountTextColor);
     }
 
     private void showComposeDialog(User user) {
@@ -124,16 +119,6 @@ public class TweetsAdapter extends
         if(tweet.getEntities().getMedia()!=null){
             if(tweet.getEntities().getMedia().size() > 0){
                 vh.getIvMedia().setVisibility(View.VISIBLE);
-                vh.getIvMedia().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        /*
-                        Intent intent = new Intent(getContext(), PhotoDetailActivity.class);
-                        intent.putExtra("media", tweet.getEntities().getMedia().get(0).getMediaUrl());
-                        getContext().startActivity(intent);
-                        */
-                    }
-                });
                 Picasso.with(mContext).
                         load(tweet.getEntities().getMedia().get(0).getMediaUrl())
                         .transform(new RoundedCornersTransformation(Consts.RL, Consts.RL)).
@@ -155,28 +140,7 @@ public class TweetsAdapter extends
                 showComposeDialog(tweet.getUser());
             }
         });
-        ImageButton ibMessage = vh.getIvDirectMsg();
-        ibMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /*
-                Intent intent = new Intent(getContext(), MessageActivity.class);
-                intent.putExtra("user", Parcels.wrap(tweet.getUser()));
-                getContext().startActivity(intent);
-                */
-            }
-        });
         ImageView ib = vh.getIvProfilePic();
-        ib.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /*
-                Intent intent = new Intent(getContext(), ProfileActivity.class);
-                intent.putExtra("user", Parcels.wrap(tweet.getUser()));
-                getContext().startActivity(intent);
-                */
-            }
-        });
         Picasso.with(mContext).load(tweet.getUser().getProfileImageUrl())
                 .transform(new RoundedCornersTransformation(Consts.RL, Consts.RL)).placeholder(R.color.grey).into(ib);
     }
@@ -186,11 +150,11 @@ public class TweetsAdapter extends
             public void onClick(View arg0) {
                 tweet.setFavorited(!tweet.isFavorited());
                 if(tweet.isFavorited()) {
-                    NetworkUtils.favorited(client, tweet.getId());
+                    tweetViewModel.userActionOnTweet(TweetUserAction.FAVORITE, tweet.getId());
                     vh.getTvLikeCount().setText(tweet.getFavouritesCount()+1+"");
                     vh.getTvLikeCount().setTextColor(getContext().getResources().getColor(R.color.favRed));
                 } else {
-                    NetworkUtils.unFavorited(client, tweet.getId());
+                    tweetViewModel.userActionOnTweet(TweetUserAction.UNFAVORITE, tweet.getId());
                     vh.getTvLikeCount().setText(tweet.getFavouritesCount()-1+"");
                     vh.getTvLikeCount().setTextColor(getContext().getResources().getColor(R.color.darkGrey));
                 }
@@ -201,11 +165,11 @@ public class TweetsAdapter extends
             public void onClick(View arg0) {
                 tweet.setRetweeted(!tweet.isRetweeted());
                 if(tweet.isRetweeted()) {
-                    NetworkUtils.retweet(client, tweet.getId());
+                    tweetViewModel.userActionOnTweet(TweetUserAction.RETWEET, tweet.getId());
                     vh.getTvRetweetCount().setText(tweet.getRetweetCount()+1+"");
                     vh.getTvRetweetCount().setTextColor(getContext().getResources().getColor(R.color.retweetGreen));
                 } else {
-                    NetworkUtils.unRetweet(client, tweet.getId());
+                    tweetViewModel.userActionOnTweet(TweetUserAction.UNRETWEET, tweet.getId());
                     vh.getTvRetweetCount().setText(tweet.getRetweetCount()-1+"");
                     vh.getTvRetweetCount().setTextColor(getContext().getResources().getColor(R.color.darkGrey));
                 }
@@ -214,16 +178,6 @@ public class TweetsAdapter extends
     }
 
 
-    private void configureViewHolder(final TweetListViewHolder vh, int position) {
-        final Tweet tweet = tweetList.get(position);
-        setButtonVisibility(tweet, vh);
-        setText(vh, tweet);
-        setToggleButton(vh, tweet);
-        setCountColor(vh, tweet);
-        setImages(vh, tweet);
-        setImageButtons(vh, tweet);
-        setToggleListners(vh, tweet);
-    }
 
     private void setButtonVisibility(Tweet tweet, TweetListViewHolder vh){
         switch(tweet.getDisplayType()){
