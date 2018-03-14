@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.amallya.twittermvvm.RestApplication;
 import com.amallya.twittermvvm.data.remote.TwitterClient;
 import com.amallya.twittermvvm.models.Tweet;
+import com.amallya.twittermvvm.ui.tweets.TweetUserAction;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
@@ -28,7 +29,25 @@ public class TweetActionsRepo {
         client = RestApplication.getRestClient();
     }
 
-    public void favorited(long tweetId){
+    public void userActionOnTweet(TweetUserAction tweetUserAction, long tweetId){
+        switch (tweetUserAction) {
+            case FAVORITE:
+                favorited(tweetId);
+            case UNFAVORITE:
+                unFavorited(tweetId);
+            case RETWEET:
+                retweet(tweetId);
+            case UNRETWEET:
+                unRetweet(tweetId);
+        }
+    }
+
+    public void userReplyOnTweet(TweetUserAction tweetUserAction, String tweetResponse, long tweetId){
+        reply(tweetId, tweetResponse);
+    }
+
+
+    private void favorited(long tweetId){
         client.postFavorite(tweetId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
@@ -44,7 +63,7 @@ public class TweetActionsRepo {
         });
     }
 
-    public void unFavorited(long tweetId){
+    private void unFavorited(long tweetId){
         client.postUnFavorite(tweetId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
@@ -60,7 +79,7 @@ public class TweetActionsRepo {
         });
     }
 
-    public void retweet(long tweetId){
+    private void retweet(long tweetId){
         client.postRetweet(tweetId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
@@ -76,7 +95,7 @@ public class TweetActionsRepo {
         });
     }
 
-    public void unRetweet(long tweetId){
+    private void unRetweet(long tweetId){
         client.postUnRetweet(tweetId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
@@ -92,7 +111,24 @@ public class TweetActionsRepo {
         });
     }
 
-    public void reply(Tweet tweet, String tweetResponse, final ViewGroup relativeLayout){
+    private void reply(long tweetId, String tweetResponse){
+        client.postReply(tweetResponse, tweetId,new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
+                System.out.println("reply success "+statusCode);
+                System.out.println("success j "+json);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject j) {
+                System.out.println("reply failure "+statusCode);
+                System.out.println("failure j "+throwable);
+            }
+        });
+    }
+
+
+    private void reply(Tweet tweet, String tweetResponse, final ViewGroup relativeLayout){
         client.postReply(tweetResponse, tweet.getId(),new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
@@ -112,7 +148,7 @@ public class TweetActionsRepo {
     }
 
 
-    public void postTweets(String tweet, final ViewGroup relativeLayout){
+    private void postTweets(String tweet, final ViewGroup relativeLayout){
         client.postTweet(tweet, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject json) {

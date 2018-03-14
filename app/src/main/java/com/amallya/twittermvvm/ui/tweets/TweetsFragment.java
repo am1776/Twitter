@@ -71,7 +71,6 @@ public class TweetsFragment extends Fragment {
         });
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,16 +107,6 @@ public class TweetsFragment extends Fragment {
         });
     }
 
-    public void postTweet(String newTweet, User loggedInUser){
-        Tweet t = new Tweet();
-        t.setText(newTweet);
-        t.setUser(loggedInUser);
-        t.setEntities(new Entity());
-        t.setCreatedAt(Consts.JUST_NOW);
-        tweetList.add(0,t);
-        tweetsAdapter.notifyDataSetChanged();
-    }
-
     private void setRecyclerView(){
         avLoadingIndicatorView = (AVLoadingIndicatorView)getView().findViewById(R.id.avi);
         RecyclerView rv = (RecyclerView)getView().findViewById(R.id.rvTweets);
@@ -134,15 +123,11 @@ public class TweetsFragment extends Fragment {
                 new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        Intent intent;
-                        switch(tweetList.get(position).getDisplayType()){
-                            default:
-                                intent = new Intent(getActivity(), TweetDetailActivity.class);
-                                intent.putExtra("tweet", Parcels.wrap(tweetList.get(position)));
-                                startActivity(intent);
+                            Intent intent = new Intent(getActivity(), TweetDetailActivity.class);
+                            intent.putExtra(TweetDetailActivity.TWEET_EXTRA, Parcels.wrap(tweetList.get(position)));
+                            startActivity(intent);
                         }
                     }
-                }
         );
     }
 }

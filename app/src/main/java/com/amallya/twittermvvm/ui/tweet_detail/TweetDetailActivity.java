@@ -1,5 +1,6 @@
 package com.amallya.twittermvvm.ui.tweet_detail;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,78 +14,83 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.amallya.twittermvvm.R;
-import com.amallya.twittermvvm.RestApplication;
-import com.amallya.twittermvvm.data.remote.TwitterClient;
 import com.amallya.twittermvvm.models.Tweet;
+import com.amallya.twittermvvm.ui.tweets.TweetUserAction;
 import com.amallya.twittermvvm.utils.Consts;
-import com.amallya.twittermvvm.utils.NetworkUtils;
 import com.amallya.twittermvvm.utils.Utils;
 import com.bumptech.glide.Glide;
 
 import org.parceler.Parcels;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class TweetDetailActivity extends AppCompatActivity {
 
-    private ImageButton ivProfilePic, ivReply, ivDirectMsg;
-    private ToggleButton ivRetweet, ivLike;
-    private TextView tvProfileName, tvProfileHandler, tvCreatedTime, tvTweet, tvRetweetCount, tvLikeCount;
-    private ImageView ivMedia;
-    private Toolbar toolbar;
-    private EditText etReply;
-    private TwitterClient client;
-    private RelativeLayout relativeLayout;
+    @BindView(R.id.iv_profile_pic) ImageButton ivProfilePic;
+    @BindView(R.id.iv_reply) ImageButton ivReply;
+    @BindView(R.id.iv_direct_msg) ImageButton ivDirectMsg;
+    @BindView(R.id.iv_retweet) ToggleButton ivRetweet;
+    @BindView(R.id.iv_like) ToggleButton ivLike;
+    @BindView(R.id.iv_media) ImageView ivMedia;
+    @BindView(R.id.et_reply) EditText etReply;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+
+    @BindView(R.id.tv_profile_name) TextView tvProfileName;
+    @BindView(R.id.tv_profile_handle) TextView tvProfileHandler;
+    @BindView(R.id.tv_created_time) TextView tvCreatedTime;
+    @BindView(R.id.tv_tweet) TextView tvTweet;
+    @BindView(R.id.tv_retweet_count) TextView tvRetweetCount;
+    @BindView(R.id.tv_like_count) TextView tvLikeCount;
+
+    @BindView(R.id.root) private RelativeLayout relativeLayout;
+
     private Tweet tweet;
+    private TweetDetailViewModel viewModel;
+    public static final String TWEET_EXTRA = "tweet";
+    private static final String TITLE = "tweet";
+    private static final String REPLY_TO = "Reply to ";
+    private static final String BLANK_TEXT = "";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tweet_detail);
-        client = RestApplication.getRestClient();
+        ButterKnife.bind(this);
+        viewModel =
+                ViewModelProviders.of(this).get(TweetDetailViewModel.class);
         intitializeViews();
-        tweet = (Tweet) Parcels.unwrap(getIntent().getParcelableExtra("tweet"));
+        tweet = Parcels.unwrap(getIntent().getParcelableExtra(TWEET_EXTRA));
         setupViews(tweet);
     }
 
     private void setupViews(final Tweet tweet) {
-        getSupportActionBar().setTitle("Tweet");
-        tvCreatedTime = (TextView)findViewById(R.id.tv_created_time); tvCreatedTime.setText(Utils.getTwitterDateVerbose(tweet.getCreatedAt()));
-        tvLikeCount = ((TextView)findViewById(R.id.tv_like_count)); tvLikeCount.setText(tweet.getFavouritesCount()+"");
-        tvProfileHandler = ((TextView)findViewById(R.id.tv_profile_handle)); tvProfileHandler.setText("@"+tweet.getUser().getScreenName());
-        tvProfileName = ((TextView)findViewById(R.id.tv_profile_name)); tvProfileName.setText(tweet.getUser().getName());
-        tvRetweetCount = ((TextView)findViewById(R.id.tv_retweet_count)); tvRetweetCount.setText(tweet.getRetweetCount()+"");
-        tvTweet = ((TextView)findViewById(R.id.tv_tweet)); tvTweet.setText(tweet.getText());
-        etReply = ((EditText) findViewById(R.id.et_reply)); etReply.setHint("Reply to "+tweet.getUser().getName());
-        ivLike = ((ToggleButton)findViewById(R.id.iv_like));
-        ivRetweet = ((ToggleButton)findViewById(R.id.iv_retweet));
+        getSupportActionBar().setTitle(TITLE);
+        tvCreatedTime.setText(Utils.getTwitterDateVerbose(tweet.getCreatedAt()));
+        tvLikeCount.setText(tweet.getFavouritesCount()+"");
+        tvProfileHandler.setText(getResources().getString(R.string.screen_name, tweet.getUser().getScreenName()));
+        tvProfileName.setText(tweet.getUser().getName());
+        tvRetweetCount.setText(tweet.getRetweetCount()+"");
+        tvTweet.setText(tweet.getText());
+        etReply.setHint(REPLY_TO+tweet.getUser().getName());
         ivLike.setChecked(tweet.isFavorited());
         ivRetweet.setChecked(tweet.isRetweeted());
-        ivDirectMsg = ((ImageButton)findViewById(R.id.iv_direct_msg));
-        ivProfilePic = ((ImageButton)findViewById(R.id.iv_profile_pic));
-        ivReply = ((ImageButton)findViewById(R.id.iv_reply));
-        ivMedia = ((ImageView)findViewById(R.id.iv_media));
         setToggleButtons();
         setImages();
     }
 
 
     private void setImages(){
-        if(tweet.getEntities().getMedia()!=null){
-            if(tweet.getEntities().getMedia().size() > 0){
-                ivMedia.setVisibility(View.VISIBLE);
-                System.out.println("Media url: "+tweet.getEntities().getMedia().get(0).getMediaUrl());
-                Glide.with(this).load(tweet.getEntities().getMedia().get(0).getMediaUrl())
-                        .bitmapTransform(new RoundedCornersTransformation(this, Consts.RL, Consts.RL))
-                        .placeholder(R.color.grey).into(ivMedia);
-            } else{
-                ivMedia.setVisibility(View.GONE);
-            }
+        if((tweet.getEntities().getMedia()!=null) && (tweet.getEntities().getMedia().size() > 0)){
+            ivMedia.setVisibility(View.VISIBLE);
+            Glide.with(this).load(tweet.getEntities().getMedia().get(0).getMediaUrl())
+                    .bitmapTransform(new RoundedCornersTransformation(this, Consts.RL, Consts.RL))
+                    .placeholder(R.color.grey).into(ivMedia);
         } else {
             ivMedia.setVisibility(View.GONE);
         }
-
         final String screenName = tweet.getUser().getScreenName();
         etReply.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -94,15 +100,12 @@ public class TweetDetailActivity extends AppCompatActivity {
                 }
             }
         });
-
         Glide.with(this).load(tweet.getUser().getProfileImageUrl())
                 .bitmapTransform(new RoundedCornersTransformation(this, Consts.RS, Consts.RS))
                 .placeholder(R.color.grey).into(ivProfilePic);
     }
 
     private void intitializeViews(){
-        relativeLayout = (RelativeLayout) findViewById(R.id.root);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setElevation(5);
     }
@@ -111,11 +114,11 @@ public class TweetDetailActivity extends AppCompatActivity {
         ivLike.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    NetworkUtils.favorited(client, tweet.getId());
+                    viewModel.userActionOnTweet(TweetUserAction.FAVORITE, tweet.getId());
                     tvLikeCount.setText(tweet.getFavouritesCount()+1+"");
                     tvLikeCount.setTextColor(getResources().getColor(R.color.favRed));
                 } else {
-                    NetworkUtils.unFavorited(client, tweet.getId());
+                    viewModel.userActionOnTweet(TweetUserAction.UNFAVORITE, tweet.getId());
                     tvLikeCount.setText(tweet.getFavouritesCount()-1+"");
                     tvLikeCount.setTextColor(getResources().getColor(R.color.darkGrey));
                 }
@@ -125,11 +128,11 @@ public class TweetDetailActivity extends AppCompatActivity {
         ivRetweet.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    NetworkUtils.retweet(client, tweet.getId());
+                    viewModel.userActionOnTweet(TweetUserAction.RETWEET, tweet.getId());
                     tvRetweetCount.setText(tweet.getRetweetCount()+1+"");
                     tvRetweetCount.setTextColor(getResources().getColor(R.color.retweetGreen));
                 } else {
-                    NetworkUtils.unRetweet(client, tweet.getId());
+                    viewModel.userActionOnTweet(TweetUserAction.UNRETWEET, tweet.getId());
                     tvRetweetCount.setText(tweet.getRetweetCount()-1+"");
                     tvRetweetCount.setTextColor(getResources().getColor(R.color.darkGrey));
                 }
@@ -139,8 +142,8 @@ public class TweetDetailActivity extends AppCompatActivity {
 
     public void replyClicked(View view){
         String tweetResponse = etReply.getText().toString();
-        etReply.setText("");
-        NetworkUtils.reply(client, tweet, tweetResponse ,relativeLayout);
+        etReply.setText(BLANK_TEXT);
+        viewModel.userReplyOnTweet(TweetUserAction.REPLY, tweet.getId(), tweetResponse);
     }
 
 }

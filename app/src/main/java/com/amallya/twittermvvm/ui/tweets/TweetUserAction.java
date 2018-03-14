@@ -5,5 +5,5 @@ package com.amallya.twittermvvm.ui.tweets;
  */
 
 public enum TweetUserAction {
-    FAVORITE, UNFAVORITE, RETWEET, UNRETWEET;
+    FAVORITE, UNFAVORITE, RETWEET, UNRETWEET, REPLY;
 }

@@ -1,8 +1,6 @@
 package com.amallya.twittermvvm.ui.tweets;
 
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,16 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import com.amallya.twittermvvm.ui.compose.ComposeFragment;
 import com.amallya.twittermvvm.utils.Consts;
-import com.amallya.twittermvvm.utils.NetworkUtils;
 import com.amallya.twittermvvm.utils.PatternEditableBuilder;
 import com.amallya.twittermvvm.R;
-import com.amallya.twittermvvm.RestApplication;
-import com.amallya.twittermvvm.data.remote.TwitterClient;
 import com.amallya.twittermvvm.utils.Utils;
 import com.amallya.twittermvvm.models.Tweet;
-import com.amallya.twittermvvm.models.User;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -109,11 +102,6 @@ public class TweetsAdapter extends
         vh.getTvRetweetCount().setTextColor(retweetCountTextColor);
     }
 
-    private void showComposeDialog(User user) {
-        FragmentManager fm = ((FragmentActivity)mContext).getSupportFragmentManager();
-        ComposeFragment composeDialog = ComposeFragment.newInstance(RestApplication.getUser().getProfileImageUrl(), user.getScreenName());
-        composeDialog.show(fm, "fragment_alert");
-    }
 
     private void setImages(TweetListViewHolder vh, final Tweet tweet){
         if(tweet.getEntities().getMedia()!=null){
@@ -133,13 +121,6 @@ public class TweetsAdapter extends
     }
 
     private void setImageButtons(TweetListViewHolder vh, final Tweet tweet){
-        ImageButton ibReply = vh.getIvReply();
-        ibReply.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showComposeDialog(tweet.getUser());
-            }
-        });
         ImageView ib = vh.getIvProfilePic();
         Picasso.with(mContext).load(tweet.getUser().getProfileImageUrl())
                 .transform(new RoundedCornersTransformation(Consts.RL, Consts.RL)).placeholder(R.color.grey).into(ib);

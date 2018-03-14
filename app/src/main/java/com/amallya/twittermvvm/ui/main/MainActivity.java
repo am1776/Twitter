@@ -26,8 +26,6 @@ import android.widget.TextView;
 
 import com.amallya.twittermvvm.ui.tweets.TweetsFragment;
 import com.amallya.twittermvvm.utils.CircularTransform;
-import com.amallya.twittermvvm.ui.compose.ComposeFragment;
-import com.amallya.twittermvvm.utils.NetworkUtils;
 import com.amallya.twittermvvm.R;
 import com.amallya.twittermvvm.RestApplication;
 import com.amallya.twittermvvm.models.User;
@@ -41,17 +39,15 @@ import butterknife.ButterKnife;
 
 
 public class MainActivity extends AppCompatActivity
-implements NavigationView.OnNavigationItemSelectedListener, ComposeFragment.OnPostTweetListener {
+implements NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.drawer_layout) DrawerLayout drawer;
     @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.nav_view) NavigationView navigationView;
 
     TextView tvNavHeader1, tvNavHeader2;
     ImageView ivNavHeader;
     LinearLayout lvNavHeader;
-    private ComposeFragment composeDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,9 +84,6 @@ implements NavigationView.OnNavigationItemSelectedListener, ComposeFragment.OnPo
         setDrawerViews();
     }
 
-    public void onFabClicked(View view){
-        showComposeDialog();
-    }
 
     private void setDrawerViews(){
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -128,16 +121,6 @@ implements NavigationView.OnNavigationItemSelectedListener, ComposeFragment.OnPo
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        System.out.println("result recieved "+requestCode+" "+resultCode);
-        if (requestCode == 200 && resultCode == RESULT_OK && data != null) {
-            String draft = data.getStringExtra("drafts");
-            System.out.println("draft recieved "+draft);
-            composeDialog.setDraft(draft);
-        }
-        System.out.println("result recieved");
-    }
 
     @Override
     public void onBackPressed() {
@@ -158,18 +141,5 @@ implements NavigationView.OnNavigationItemSelectedListener, ComposeFragment.OnPo
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-
-    private void showComposeDialog() {
-        FragmentManager fm = getSupportFragmentManager();
-        composeDialog = ComposeFragment.newInstance(RestApplication.getUser().getProfileImageUrl(), null);
-        composeDialog.show(fm, getString(R.string.compose_dialog));
-    }
-
-    public void onTweetPosted(String newTweet){
-        NetworkUtils.postTweets(RestApplication.getRestClient(), newTweet, drawer);
-        //HomeFragment fragment = (HomeFragment)((CustomFragmentPagerAdapter)viewPager.getAdapter()).getRegisteredFragment(0);
-        //fragment.postTweet(newTweet, loggedInUser);
     }
 }

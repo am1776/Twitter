@@ -7,8 +7,6 @@ import android.arch.lifecycle.ViewModel;
 import com.amallya.twittermvvm.data.repo.TweetActionsRepo;
 import com.amallya.twittermvvm.data.repo.TweetListRepo;
 import com.amallya.twittermvvm.models.Tweet;
-import com.amallya.twittermvvm.utils.NetworkUtils;
-
 import java.util.List;
 
 /**
@@ -48,15 +46,6 @@ public class TweetViewModel extends ViewModel{
     }
 
     public void userActionOnTweet(TweetUserAction tweetUserAction, long tweetId){
-        switch (tweetUserAction) {
-            case FAVORITE:
-                tweetActionsRepo.favorited(tweetId);
-            case UNFAVORITE:
-                tweetActionsRepo.unFavorited(tweetId);
-            case RETWEET:
-                tweetActionsRepo.retweet(tweetId);
-            case UNRETWEET:
-                tweetActionsRepo.unRetweet(tweetId);
-        }
+        tweetActionsRepo.userActionOnTweet(tweetUserAction, tweetId);
     }
 }
