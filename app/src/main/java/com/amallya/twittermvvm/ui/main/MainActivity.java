@@ -8,10 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -65,9 +62,7 @@ implements NavigationView.OnNavigationItemSelectedListener {
         mainViewModel.getUserCredential().observe(this, new Observer<User>() {
             @Override
             public void onChanged(@Nullable User user) {
-                if (user != null) {
                     processUserCred(user);
-                }
             }
         });
     }

@@ -20,25 +20,27 @@ import cz.msebera.android.httpclient.Header;
 public class TweetListRepo {
 
     private TwitterClient client;
-    final MutableLiveData<List<Tweet>> tweetList;
+    final MutableLiveData<List<Tweet>> tweetListObservable;
     private static final int TWEET_ID_MAX_DEFAULT = -1;
     private long maxTweetId = TWEET_ID_MAX_DEFAULT;
+    private List<Tweet> tweetList;
 
     public TweetListRepo(){
         client = RestApplication.getRestClient();
-        tweetList = new MutableLiveData<>();;
+        tweetListObservable = new MutableLiveData<>();;
+        tweetList = new ArrayList<>();
     }
 
     public LiveData<List<Tweet>> getTweets(){
-        fetchTweets();
-        return tweetList;
+        return tweetListObservable;
     }
 
     private void fetchTweets(){
         client.getTweetTimelineList(maxTweetId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
-                tweetList.setValue(processTweetJson(json));
+                tweetList.addAll(processTweetJson(json));
+                tweetListObservable.setValue(tweetList);
             }
 
             @Override
@@ -48,6 +50,7 @@ public class TweetListRepo {
     }
 
     public void refreshTweets(){
+        tweetList.clear();
         maxTweetId = TWEET_ID_MAX_DEFAULT;
         fetchTweets();
     }
@@ -66,5 +69,9 @@ public class TweetListRepo {
         if (tweetListNew.size() > 0){
             maxTweetId = tweetListNew.get(tweetListNew.size() - 1).getId();
         }
+    }
+
+    public Tweet fetchSelectedTweet(int position){
+        return tweetList.get(position);
     }
 }

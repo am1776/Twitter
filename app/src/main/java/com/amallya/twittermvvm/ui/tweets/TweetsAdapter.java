@@ -42,6 +42,11 @@ public class TweetsAdapter extends
         this.tweetViewModel = tweetViewModel;
     }
 
+    public void setData(List<Tweet> tweetList){
+        this.tweetList = tweetList;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         return tweetList.size();

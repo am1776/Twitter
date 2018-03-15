@@ -34,9 +34,7 @@ import java.util.List;
 
 public class TweetsFragment extends Fragment {
 
-    private ArrayList<Tweet> tweetList;
     private TweetsAdapter tweetsAdapter;
-    private TwitterClient client;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RelativeLayout relativeLayout;
     private AVLoadingIndicatorView avLoadingIndicatorView;
@@ -55,8 +53,7 @@ public class TweetsFragment extends Fragment {
             @Override
             public void onChanged(@Nullable List<Tweet> tweets) {
                 if (tweets != null) {
-                    tweetList.addAll(tweets);
-                    tweetsAdapter.notifyDataSetChanged();
+                    tweetsAdapter.setData(tweets);
                     avLoadingIndicatorView.hide();
                     mSwipeRefreshLayout.setRefreshing(false);                }
             }
@@ -65,8 +62,16 @@ public class TweetsFragment extends Fragment {
         viewModel.getRefreshingObservable().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean aBoolean) {
-                tweetList.clear();
                 tweetsAdapter.notifyDataSetChanged();
+            }
+        });
+
+        viewModel.getSelectedTweetObservable().observe(this, new Observer<Tweet>() {
+            @Override
+            public void onChanged(@Nullable Tweet tweet) {
+                Intent intent = new Intent(getActivity(), TweetDetailActivity.class);
+                intent.putExtra(TweetDetailActivity.TWEET_EXTRA, Parcels.wrap(tweet));
+                startActivity(intent);
             }
         });
     }
@@ -74,12 +79,9 @@ public class TweetsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tweetList = new ArrayList<>();
-        client = RestApplication.getRestClient();
         viewModel =
                 ViewModelProviders.of(this).get(TweetViewModel.class);
         observeViewModels();
-        tweetsAdapter = new TweetsAdapter(getActivity(), tweetList, viewModel);
     }
 
     @Override
@@ -108,6 +110,7 @@ public class TweetsFragment extends Fragment {
     }
 
     private void setRecyclerView(){
+        tweetsAdapter = new TweetsAdapter(getActivity(), new ArrayList<Tweet>(), viewModel);
         avLoadingIndicatorView = (AVLoadingIndicatorView)getView().findViewById(R.id.avi);
         RecyclerView rv = (RecyclerView)getView().findViewById(R.id.rvTweets);
         rv.setAdapter(tweetsAdapter);
@@ -123,9 +126,7 @@ public class TweetsFragment extends Fragment {
                 new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                            Intent intent = new Intent(getActivity(), TweetDetailActivity.class);
-                            intent.putExtra(TweetDetailActivity.TWEET_EXTRA, Parcels.wrap(tweetList.get(position)));
-                            startActivity(intent);
+                            viewModel.onTweetClicked(position);
                         }
                     }
         );

@@ -44,7 +44,7 @@ public class TweetDetailActivity extends AppCompatActivity {
     @BindView(R.id.tv_retweet_count) TextView tvRetweetCount;
     @BindView(R.id.tv_like_count) TextView tvLikeCount;
 
-    @BindView(R.id.root) private RelativeLayout relativeLayout;
+    @BindView(R.id.root) RelativeLayout relativeLayout;
 
     private Tweet tweet;
     private TweetDetailViewModel viewModel;
