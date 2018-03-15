@@ -1,7 +1,8 @@
 package com.amallya.twittermvvm.models;
 
+import android.arch.persistence.room.*;
+
 import com.amallya.twittermvvm.utils.Utils;
-import com.amallya.twittermvvm.data.local.TweetsDatabase;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -10,7 +11,6 @@ import com.google.gson.annotations.SerializedName;
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
-
 
 
 @Parcel
@@ -197,4 +197,10 @@ public class User {
         return userList;
     }
 
+    /**
+     * Created by anmallya on 3/14/2018.
+     */
+
+    public static class TweetLocalDataSource {
+    }
 }

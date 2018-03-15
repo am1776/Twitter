@@ -26,6 +26,8 @@ public class UserCredRepo {
         client = RestApplication.getRestClient();
     }
 
+
+
     public LiveData<User> getUserCredObservable(){
         final MutableLiveData<User> data = new MutableLiveData<>();
         client.getCurrentUserInfo(new JsonHttpResponseHandler() {

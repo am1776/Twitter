@@ -79,8 +79,11 @@ public class TweetsAdapter extends
     }
 
     private void setText(TweetListViewHolder vh, Tweet tweet){
-        vh.getTvProfileName().setText(tweet.getUser().getName());
-        vh.getTvProfileHandler().setText(getContext().getResources().getString(R.string.screen_name, tweet.getUser().getScreenName()));
+        if(tweet.getUser() != null ){
+            vh.getTvProfileName().setText(tweet.getUser().getName());
+            vh.getTvProfileHandler().setText(getContext().getResources().getString(R.string.screen_name, tweet.getUser().getScreenName()));
+        }
+
         vh.getTvTweet().setText(tweet.getText());
         new PatternEditableBuilder().
                 addPattern(Pattern.compile("\\@(\\w+)"), getContext().getResources().getColor(R.color.linkBlue),
@@ -109,7 +112,7 @@ public class TweetsAdapter extends
 
 
     private void setImages(TweetListViewHolder vh, final Tweet tweet){
-        if(tweet.getEntities().getMedia()!=null){
+        if((tweet.getEntities()!= null) && (tweet.getEntities().getMedia()!=null)){
             if(tweet.getEntities().getMedia().size() > 0){
                 vh.getIvMedia().setVisibility(View.VISIBLE);
                 Picasso.with(mContext).

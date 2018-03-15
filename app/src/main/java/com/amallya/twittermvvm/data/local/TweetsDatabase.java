@@ -1,9 +1,30 @@
 package com.amallya.twittermvvm.data.local;
 
+import android.arch.persistence.room.Database;
+import android.arch.persistence.room.Room;
+import android.arch.persistence.room.RoomDatabase;
+import android.content.Context;
 
-public class TweetsDatabase {
+import com.amallya.twittermvvm.models.Tweet;
 
-    public static final String NAME = "TweetsDatabase";
+@Database(entities = {Tweet.class}, version = 2)
+public abstract class TweetsDatabase extends RoomDatabase {
 
-    public static final int VERSION = 1;
+    public abstract TweetDao tweetDao();
+
+    private static TweetsDatabase INSTANCE;
+
+    private static final Object sLock = new Object();
+
+    public static TweetsDatabase getInstance(Context context) {
+        synchronized (sLock) {
+            if (INSTANCE == null) {
+                INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+                        TweetsDatabase.class, "Tweets.db")
+                        .build();
+            }
+            return INSTANCE;
+        }
+    }
+
 }

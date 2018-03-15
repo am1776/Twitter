@@ -1,5 +1,10 @@
 package com.amallya.twittermvvm.models;
 
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
+
+import com.amallya.twittermvvm.utils.UserConverter;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -14,8 +19,10 @@ import org.parceler.Parcel;
 import java.util.ArrayList;
 
 @Parcel
+@android.arch.persistence.room.Entity
 public class Tweet  {
 
+    @Ignore
     private DisplayType displayType = DisplayType.NORMAL;
 
     public DisplayType getDisplayType() {
@@ -32,12 +39,14 @@ public class Tweet  {
     @SerializedName("id_str")
     private String idStr;
 
+    @PrimaryKey
     @SerializedName("id")
     private long id;
 
     @SerializedName("text")
     private String text;
 
+    @TypeConverters({UserConverter.class})
     @SerializedName("user")
     private User user;
 
@@ -61,6 +70,7 @@ public class Tweet  {
     @SerializedName("retweeted")
     private boolean retweeted;
 
+    @Ignore
     @SerializedName("entities")
     private Entity entities;
 
@@ -72,6 +82,7 @@ public class Tweet  {
         this.extendedEntities = extendedEntities;
     }
 
+    @Ignore
     @SerializedName("extended_entities")
     private Entity extendedEntities;
 

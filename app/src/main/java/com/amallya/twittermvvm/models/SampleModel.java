@@ -1,6 +1,5 @@
 package com.amallya.twittermvvm.models;
 
-import com.amallya.twittermvvm.data.local.MyDatabase;
 import org.json.JSONException;
 import org.json.JSONObject;
 
