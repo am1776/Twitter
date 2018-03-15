@@ -1,7 +1,5 @@
-package com.amallya.twittermvvm.data;
+package com.amallya.twittermvvm.data.source;
 
-import com.amallya.twittermvvm.RestApplication;
-import com.amallya.twittermvvm.data.local.TweetsDatabase;
 import com.amallya.twittermvvm.models.Tweet;
 
 import java.util.List;

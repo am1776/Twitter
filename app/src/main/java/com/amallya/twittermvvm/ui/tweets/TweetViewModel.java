@@ -22,10 +22,10 @@ public class TweetViewModel extends ViewModel{
     private TweetListRepo tweetListRepo;
     private TweetActionsRepo tweetActionsRepo;
 
-    public TweetViewModel() {
+    public TweetViewModel(TweetListRepo tweetListRepo, TweetActionsRepo tweetActionsRepo) {
         super();
-        tweetListRepo = new TweetListRepo();
-        tweetActionsRepo = new TweetActionsRepo();
+        this.tweetListRepo = tweetListRepo;
+        this.tweetActionsRepo = tweetActionsRepo;
         tweetListObservable = tweetListRepo.getTweets();
         isRefreshingObservable = new MutableLiveData<>();
         clickedTweetObservable = new MutableLiveData<>();

@@ -1,8 +1,6 @@
-package com.amallya.twittermvvm.data.remote;
+package com.amallya.twittermvvm.data.source.remote;
 
 import com.amallya.twittermvvm.RestApplication;
-import com.amallya.twittermvvm.data.DataSource;
-import com.amallya.twittermvvm.data.TweetRemoteDataSource;
 import com.amallya.twittermvvm.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -10,7 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -21,8 +18,8 @@ public class TweetRemoteDataSourceImpl implements TweetRemoteDataSource {
 
     private TwitterClient client;
 
-    public TweetRemoteDataSourceImpl(){
-        client = RestApplication.getRestClient();
+    public TweetRemoteDataSourceImpl(TwitterClient client){
+        this.client = client;
     }
 
     @Override

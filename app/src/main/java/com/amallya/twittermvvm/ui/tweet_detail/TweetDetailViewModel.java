@@ -18,9 +18,9 @@ public class TweetDetailViewModel extends ViewModel{
 
     private TweetActionsRepo tweetActionsRepo;
 
-    public TweetDetailViewModel() {
+    public TweetDetailViewModel(TweetActionsRepo tweetActionsRepo) {
         super();
-        tweetActionsRepo = new TweetActionsRepo();
+        this.tweetActionsRepo = tweetActionsRepo;
     }
 
     public void userActionOnTweet(TweetUserAction tweetUserAction, long tweetId){

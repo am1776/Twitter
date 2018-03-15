@@ -1,19 +1,16 @@
 package com.amallya.twittermvvm.data.repo;
 
-import android.arch.lifecycle.MutableLiveData;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.ViewGroup;
 
 import com.amallya.twittermvvm.RestApplication;
-import com.amallya.twittermvvm.data.remote.TwitterClient;
+import com.amallya.twittermvvm.data.source.remote.TwitterClient;
 import com.amallya.twittermvvm.models.Tweet;
 import com.amallya.twittermvvm.ui.tweets.TweetUserAction;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
-
-import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -21,24 +18,28 @@ import cz.msebera.android.httpclient.Header;
  * Created by anmallya on 3/13/2018.
  */
 
-public class TweetActionsRepo {
+public class TweetActionsRepo extends BaseRepo{
 
     private TwitterClient client;
 
-    public TweetActionsRepo(){
-        client = RestApplication.getRestClient();
+    public TweetActionsRepo(TwitterClient client){
+        this.client = client;
     }
 
     public void userActionOnTweet(TweetUserAction tweetUserAction, long tweetId){
         switch (tweetUserAction) {
             case FAVORITE:
                 favorited(tweetId);
+                 break;
             case UNFAVORITE:
                 unFavorited(tweetId);
+                break;
             case RETWEET:
                 retweet(tweetId);
+                break;
             case UNRETWEET:
                 unRetweet(tweetId);
+                break;
         }
     }
 

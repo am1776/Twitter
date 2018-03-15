@@ -1,6 +1,5 @@
 package com.amallya.twittermvvm.models;
 
-import com.amallya.twittermvvm.data.local.TweetsDatabase;
 import com.google.gson.annotations.SerializedName;
 import org.parceler.Parcel;
 

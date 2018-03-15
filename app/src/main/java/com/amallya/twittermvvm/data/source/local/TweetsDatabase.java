@@ -1,4 +1,4 @@
-package com.amallya.twittermvvm.data.local;
+package com.amallya.twittermvvm.data.source.local;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;

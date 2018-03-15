@@ -1,6 +1,4 @@
-package com.amallya.twittermvvm.data.remote;
-
-import android.content.Context;
+package com.amallya.twittermvvm.data.source.remote;
 
 import android.content.Context;
 

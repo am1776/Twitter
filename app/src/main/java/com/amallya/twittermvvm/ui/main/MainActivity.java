@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.amallya.twittermvvm.ViewModelFactory;
 import com.amallya.twittermvvm.ui.tweets.TweetsFragment;
 import com.amallya.twittermvvm.utils.CircularTransform;
 import com.amallya.twittermvvm.R;
@@ -53,8 +54,9 @@ implements NavigationView.OnNavigationItemSelectedListener {
         ButterKnife.bind(this);
         setViews();
         setupFragment(savedInstanceState);
+        ViewModelFactory factory = ViewModelFactory.getInstance(getApplication());
         final MainViewModel viewModel =
-                ViewModelProviders.of(this).get(MainViewModel.class);
+                ViewModelProviders.of(this, factory).get(MainViewModel.class);
         observeViewModel(viewModel);
     }
 

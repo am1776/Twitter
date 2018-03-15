@@ -1,7 +1,8 @@
-package com.amallya.twittermvvm.data.local;
+package com.amallya.twittermvvm.data.source.local;
+
+import android.content.Context;
 
 import com.amallya.twittermvvm.RestApplication;
-import com.amallya.twittermvvm.data.TweetLocalDataSource;
 import com.amallya.twittermvvm.models.Tweet;
 import com.amallya.twittermvvm.utils.AppExecutors;
 
@@ -13,10 +14,12 @@ import java.util.List;
 
 public class TweetLocalDataSourceImpl implements TweetLocalDataSource {
 
-    AppExecutors appExecutors;
+    private AppExecutors appExecutors;
+    private Context context;
 
-    public TweetLocalDataSourceImpl(){
-        appExecutors = new AppExecutors();
+    public TweetLocalDataSourceImpl(Context context, AppExecutors appExecutors){
+        this.appExecutors = appExecutors;
+        this.context = context;
     }
 
     @Override
@@ -24,7 +27,7 @@ public class TweetLocalDataSourceImpl implements TweetLocalDataSource {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                TweetsDatabase.getInstance(RestApplication.getContext()).tweetDao().insertTweets(newTweets);
+                TweetsDatabase.getInstance(context).tweetDao().insertTweets(newTweets);
             }
         };
         appExecutors.diskIO().execute(runnable);
@@ -35,7 +38,7 @@ public class TweetLocalDataSourceImpl implements TweetLocalDataSource {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                TweetsDatabase.getInstance(RestApplication.getContext()).tweetDao().deleteAllTweets();
+                TweetsDatabase.getInstance(context).tweetDao().deleteAllTweets();
             }
         };
         appExecutors.diskIO().execute(runnable);
@@ -46,7 +49,7 @@ public class TweetLocalDataSourceImpl implements TweetLocalDataSource {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<Tweet> tweets = TweetsDatabase.getInstance(RestApplication.getContext()).tweetDao().getAllTweets();
+                final List<Tweet> tweets = TweetsDatabase.getInstance(context).tweetDao().getAllTweets();
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {

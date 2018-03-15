@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.amallya.twittermvvm.models.User;
-import com.amallya.twittermvvm.data.remote.TwitterClient;
+import com.amallya.twittermvvm.data.source.remote.TwitterClient;
 
 
 

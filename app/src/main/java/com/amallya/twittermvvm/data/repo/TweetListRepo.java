@@ -2,12 +2,11 @@ package com.amallya.twittermvvm.data.repo;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import com.amallya.twittermvvm.RestApplication;
-import com.amallya.twittermvvm.data.DataSource;
-import com.amallya.twittermvvm.data.TweetLocalDataSource;
-import com.amallya.twittermvvm.data.local.TweetLocalDataSourceImpl;
-import com.amallya.twittermvvm.data.local.TweetsDatabase;
-import com.amallya.twittermvvm.data.remote.TweetRemoteDataSourceImpl;
+
+import com.amallya.twittermvvm.data.source.DataSource;
+import com.amallya.twittermvvm.data.source.local.TweetLocalDataSource;
+import com.amallya.twittermvvm.data.source.local.TweetLocalDataSourceImpl;
+import com.amallya.twittermvvm.data.source.remote.TweetRemoteDataSourceImpl;
 import com.amallya.twittermvvm.models.Tweet;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.List;
  * Created by anmallya on 3/12/2018.
  */
 
-public class TweetListRepo {
+public class TweetListRepo extends BaseRepo {
 
     private DataSource localDataSource, remoteDataSource;
     final MutableLiveData<List<Tweet>> tweetListObservable;
@@ -25,9 +24,9 @@ public class TweetListRepo {
     private long maxTweetId = TWEET_ID_MAX_DEFAULT;
     private List<Tweet> tweetList;
 
-    public TweetListRepo(){
-        localDataSource = new TweetLocalDataSourceImpl();
-        remoteDataSource = new TweetRemoteDataSourceImpl();
+    public TweetListRepo(DataSource localDataSource, DataSource remoteDataSource){
+        this.localDataSource = localDataSource;
+        this.remoteDataSource = remoteDataSource;
         tweetListObservable = new MutableLiveData<>();;
         tweetList = new ArrayList<>();
     }

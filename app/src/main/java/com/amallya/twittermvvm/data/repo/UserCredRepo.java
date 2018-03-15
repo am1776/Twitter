@@ -4,7 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 import com.amallya.twittermvvm.RestApplication;
-import com.amallya.twittermvvm.data.remote.TwitterClient;
+import com.amallya.twittermvvm.data.source.remote.TwitterClient;
 import com.amallya.twittermvvm.models.User;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -18,15 +18,13 @@ import cz.msebera.android.httpclient.Header;
  * Created by anmallya on 3/12/2018.
  */
 
-public class UserCredRepo {
+public class UserCredRepo extends BaseRepo {
 
     private TwitterClient client;
 
-    public UserCredRepo(){
-        client = RestApplication.getRestClient();
+    public UserCredRepo(TwitterClient client){
+        this.client = client;
     }
-
-
 
     public LiveData<User> getUserCredObservable(){
         final MutableLiveData<User> data = new MutableLiveData<>();

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.amallya.twittermvvm.R;
+import com.amallya.twittermvvm.ViewModelFactory;
 import com.amallya.twittermvvm.models.Tweet;
 import com.amallya.twittermvvm.ui.tweets.TweetUserAction;
 import com.amallya.twittermvvm.utils.Consts;
@@ -59,8 +60,9 @@ public class TweetDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tweet_detail);
         ButterKnife.bind(this);
+        ViewModelFactory factory = ViewModelFactory.getInstance(getApplication());
         viewModel =
-                ViewModelProviders.of(this).get(TweetDetailViewModel.class);
+                ViewModelProviders.of(this, factory).get(TweetDetailViewModel.class);
         intitializeViews();
         tweet = Parcels.unwrap(getIntent().getParcelableExtra(TWEET_EXTRA));
         setupViews(tweet);

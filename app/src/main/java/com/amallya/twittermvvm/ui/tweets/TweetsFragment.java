@@ -9,27 +9,21 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.amallya.twittermvvm.models.User;
-import com.amallya.twittermvvm.utils.Consts;
+import com.amallya.twittermvvm.ViewModelFactory;
 import com.amallya.twittermvvm.utils.EndlessRecyclerViewScrollListener;
 import com.amallya.twittermvvm.utils.ItemClickSupport;
 import com.amallya.twittermvvm.R;
-import com.amallya.twittermvvm.RestApplication;
 import com.amallya.twittermvvm.ui.tweet_detail.TweetDetailActivity;
-import com.amallya.twittermvvm.data.remote.TwitterClient;
-import com.amallya.twittermvvm.models.Entity;
 import com.amallya.twittermvvm.models.Tweet;
 import com.wang.avi.AVLoadingIndicatorView;
 import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
-
 
 
 public class TweetsFragment extends Fragment {
@@ -79,8 +73,9 @@ public class TweetsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
         viewModel =
-                ViewModelProviders.of(this).get(TweetViewModel.class);
+                ViewModelProviders.of(this, factory).get(TweetViewModel.class);
         observeViewModels();
     }
 

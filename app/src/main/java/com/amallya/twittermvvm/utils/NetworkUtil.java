@@ -1,6 +1,6 @@
 package com.amallya.twittermvvm.utils;
 
-import com.amallya.twittermvvm.data.remote.InternetAvailability;
+import com.amallya.twittermvvm.data.source.remote.InternetAvailability;
 
 import java.net.InetAddress;
 
