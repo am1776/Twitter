@@ -9,9 +9,9 @@ import java.util.List;
  * Created by anmallya on 3/14/2018.
  */
 
-public interface TweetLocalDataSource extends DataSource {
+public interface TweetLocalDataSource<T extends DataSource.ResultCallBack> extends DataSource {
 
-    void insertTweets(List<Tweet> newTweets);
+    void insertTweets(List<Tweet> newTweets, T resultCallBack);
 
-    void deleteAllTweets();
+    void deleteAllTweets(T resultCallBack);
 }

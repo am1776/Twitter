@@ -24,13 +24,13 @@ public class Injection {
     }
 
     public static TweetActionsRepo provideTweetActionsRepo(Context context) {
-        TwitterClient twitterClient = provideTwitterClient();
-        return new TweetActionsRepo(twitterClient);
+        DataSource remoteDataSource =  provideRemoteDataSource(context);
+        return new TweetActionsRepo(remoteDataSource);
     }
 
     public static UserCredRepo provideUserCredRepo(Context context) {
-        TwitterClient twitterClient = provideTwitterClient();
-        return new UserCredRepo(twitterClient);
+        DataSource remoteDataSource =  provideRemoteDataSource(context);
+        return new UserCredRepo(remoteDataSource);
     }
 
     public static DataSource provideRemoteDataSource(Context context){

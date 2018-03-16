@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModel;
 
 import com.amallya.twittermvvm.data.repo.TweetActionsRepo;
 import com.amallya.twittermvvm.data.repo.TweetListRepo;
+import com.amallya.twittermvvm.models.Response;
 import com.amallya.twittermvvm.models.Tweet;
 import com.amallya.twittermvvm.ui.tweets.TweetUserAction;
 
@@ -29,5 +30,9 @@ public class TweetDetailViewModel extends ViewModel{
 
     public void userReplyOnTweet(TweetUserAction tweetUserAction, long tweetId, String tweetResponse){
         tweetActionsRepo.userReplyOnTweet(tweetUserAction, tweetResponse, tweetId);
+    }
+
+    public LiveData<Response<?>> getTweetsActionsObservable(){
+        return tweetActionsRepo.getTweetsActionObservable();
     }
 }

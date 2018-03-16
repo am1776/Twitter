@@ -13,4 +13,5 @@
 
     <string name="screen_name">\@%1$s</string>
     <string name="compose_dialog">compose_dialog_fragment</string>
+    <string name="error_msg">There has been an error</string>
 </resources>

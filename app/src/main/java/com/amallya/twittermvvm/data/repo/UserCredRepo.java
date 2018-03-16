@@ -4,7 +4,12 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 import com.amallya.twittermvvm.RestApplication;
+import com.amallya.twittermvvm.data.source.DataSource;
+import com.amallya.twittermvvm.data.source.remote.TweetRemoteDataSource;
+import com.amallya.twittermvvm.data.source.remote.TweetRemoteDataSourceImpl;
 import com.amallya.twittermvvm.data.source.remote.TwitterClient;
+import com.amallya.twittermvvm.models.Response;
+import com.amallya.twittermvvm.models.Tweet;
 import com.amallya.twittermvvm.models.User;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -12,6 +17,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONObject;
+
+import java.util.List;
+
 import cz.msebera.android.httpclient.Header;
 
 /**
@@ -20,33 +28,29 @@ import cz.msebera.android.httpclient.Header;
 
 public class UserCredRepo extends BaseRepo {
 
-    private TwitterClient client;
+    private DataSource dataSource;
 
-    public UserCredRepo(TwitterClient client){
-        this.client = client;
+    public UserCredRepo(DataSource dataSource){
+        this.dataSource = dataSource;
     }
 
-    public LiveData<User> getUserCredObservable(){
-        final MutableLiveData<User> data = new MutableLiveData<>();
-        client.getCurrentUserInfo(new JsonHttpResponseHandler() {
+    public LiveData<Response<User>> getUserCredObservable(){
+        final MutableLiveData<Response<User>> data = new MutableLiveData<>();
+        ((TweetRemoteDataSource) dataSource).getUserCred(new DataSource.ResultCallBack<User>() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
-                Gson gson = new Gson();
-                JsonParser parser = new JsonParser();
-                JsonElement tweetElement = parser.parse(json.toString());
-                JsonObject jObject = tweetElement.getAsJsonObject();
-                User user = gson.fromJson(jObject, User.class);
-                data.setValue(user);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject j) {
-                Log.d("Failed: ", ""+statusCode);
-                Log.d("Error : ", "" + throwable);
-                if(throwable instanceof  java.io.IOException){
-                }
+            public void onResultObtained(Response<User> response) {
+                data.setValue(response);
             }
         });
         return data;
+    }
+
+    public void clearAccessTokens(){
+        ((TweetRemoteDataSource) dataSource).clearAccessToken(new DataSource.ResultCallBack(){
+            @Override
+            public void onResultObtained(Response response) {
+
+            }
+        });
     }
 }

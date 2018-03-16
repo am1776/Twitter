@@ -1,7 +1,10 @@
 package com.amallya.twittermvvm.ui.tweet_detail;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -15,7 +18,10 @@ import android.widget.ToggleButton;
 
 import com.amallya.twittermvvm.R;
 import com.amallya.twittermvvm.ViewModelFactory;
+import com.amallya.twittermvvm.models.Response;
 import com.amallya.twittermvvm.models.Tweet;
+import com.amallya.twittermvvm.models.User;
+import com.amallya.twittermvvm.ui.main.MainViewModel;
 import com.amallya.twittermvvm.ui.tweets.TweetUserAction;
 import com.amallya.twittermvvm.utils.Consts;
 import com.amallya.twittermvvm.utils.Utils;
@@ -54,7 +60,6 @@ public class TweetDetailActivity extends AppCompatActivity {
     private static final String REPLY_TO = "Reply to ";
     private static final String BLANK_TEXT = "";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,9 +68,35 @@ public class TweetDetailActivity extends AppCompatActivity {
         ViewModelFactory factory = ViewModelFactory.getInstance(getApplication());
         viewModel =
                 ViewModelProviders.of(this, factory).get(TweetDetailViewModel.class);
-        intitializeViews();
+        observeViewModel(viewModel);
+        setupToolbar();
         tweet = Parcels.unwrap(getIntent().getParcelableExtra(TWEET_EXTRA));
         setupViews(tweet);
+    }
+
+    private void observeViewModel(TweetDetailViewModel tweetDetailViewModel){
+        tweetDetailViewModel.getTweetsActionsObservable().observe(this, new Observer<Response<?>>() {
+            @Override
+            public void onChanged(@Nullable Response<?> response) {
+                switch(response.getErrorCode()){
+                    case SUCCESS:
+                        handleSuccess(response);
+                        break;
+                    case ERROR:
+                        handleError(response);
+                        break;
+                }
+            }
+        });
+    }
+
+    private void handleSuccess(Response<?> response){
+    }
+
+    private void handleError(Response<?> response){
+        Snackbar mySnackbar = Snackbar.make(findViewById(R.id.root),
+                getString(R.string.error_msg), Snackbar.LENGTH_SHORT);
+        mySnackbar.show();
     }
 
     private void setupViews(final Tweet tweet) {
@@ -107,7 +138,7 @@ public class TweetDetailActivity extends AppCompatActivity {
                 .placeholder(R.color.grey).into(ivProfilePic);
     }
 
-    private void intitializeViews(){
+    private void setupToolbar(){
         setSupportActionBar(toolbar);
         getSupportActionBar().setElevation(5);
     }

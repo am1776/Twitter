@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.amallya.twittermvvm.ViewModelFactory;
+import com.amallya.twittermvvm.models.Response;
 import com.amallya.twittermvvm.utils.EndlessRecyclerViewScrollListener;
 import com.amallya.twittermvvm.utils.ItemClickSupport;
 import com.amallya.twittermvvm.R;
@@ -43,14 +45,19 @@ public class TweetsFragment extends Fragment {
     }
 
     private void observeViewModels(){
-        viewModel.getTweetsObservable().observe(this, new Observer<List<Tweet>>() {
+        viewModel.getTweetsObservable().observe(this, new Observer<Response<List<Tweet>>>() {
             @Override
-            public void onChanged(@Nullable List<Tweet> tweets) {
-                if (tweets != null) {
-                    tweetsAdapter.setData(tweets);
-                    avLoadingIndicatorView.hide();
-                    mSwipeRefreshLayout.setRefreshing(false);                }
+            public void onChanged(@Nullable Response<List<Tweet>> response) {
+                switch(response.getErrorCode()){
+                    case SUCCESS:
+                        handleSuccess(response);
+                        break;
+                    case ERROR:
+                        handleError(response);
+                        break;
+                }
             }
+
         });
 
         viewModel.getRefreshingObservable().observe(this, new Observer<Boolean>() {
@@ -68,7 +75,36 @@ public class TweetsFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        viewModel.getTweetsActionsObservable().observe(this, new Observer<Response<?>>() {
+            @Override
+            public void onChanged(@Nullable Response<?> response) {
+                switch(response.getErrorCode()){
+                    case SUCCESS:
+                        // DO nothing
+                        break;
+                    case ERROR:
+                        handleError(response);
+                        break;
+                }
+            }
+        });
     }
+
+    private void handleSuccess(Response<List<Tweet>> response){
+        tweetsAdapter.setData(response.getData());
+        avLoadingIndicatorView.hide();
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    private void handleError(Response<?> response){
+        Snackbar mySnackbar = Snackbar.make(getView().findViewById(R.id.root1),
+                getString(R.string.error_msg), Snackbar.LENGTH_SHORT);
+        mySnackbar.show();
+        avLoadingIndicatorView.hide();
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

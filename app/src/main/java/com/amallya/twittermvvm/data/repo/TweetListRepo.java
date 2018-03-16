@@ -7,6 +7,7 @@ import com.amallya.twittermvvm.data.source.DataSource;
 import com.amallya.twittermvvm.data.source.local.TweetLocalDataSource;
 import com.amallya.twittermvvm.data.source.local.TweetLocalDataSourceImpl;
 import com.amallya.twittermvvm.data.source.remote.TweetRemoteDataSourceImpl;
+import com.amallya.twittermvvm.models.Response;
 import com.amallya.twittermvvm.models.Tweet;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.List;
 public class TweetListRepo extends BaseRepo {
 
     private DataSource localDataSource, remoteDataSource;
-    final MutableLiveData<List<Tweet>> tweetListObservable;
+    final MutableLiveData<Response<List<Tweet>>> tweetListObservable;
     private static final int TWEET_ID_MAX_DEFAULT = -1;
     private long maxTweetId = TWEET_ID_MAX_DEFAULT;
     private List<Tweet> tweetList;
@@ -31,19 +32,23 @@ public class TweetListRepo extends BaseRepo {
         tweetList = new ArrayList<>();
     }
 
-    public LiveData<List<Tweet>> getTweets(){
+    public LiveData<Response<List<Tweet>>> getTweets(){
         return tweetListObservable;
     }
 
     private void fetchTweets(){
         final DataSource dataSource =  isConnectedToInternet() ? remoteDataSource : localDataSource;
-        dataSource.getTweets(maxTweetId, new DataSource.GetTweetsCallBack(){
+        dataSource.getTweets(maxTweetId, new DataSource.ResultCallBack<List<Tweet>>(){
             @Override
-            public void onTweetsObtained(List<Tweet> tweetListNew) {
-                updateLocalDB(dataSource, tweetListNew);
-                updateMaxTweetId(tweetListNew);
-                tweetList.addAll(tweetListNew);
-                tweetListObservable.setValue(tweetList);
+            public void onResultObtained(Response<List<Tweet>> response) {
+                if(response.getErrorCode() == Response.Status.SUCCESS){
+                    List<Tweet> tweetListNew = response.getData();
+                    updateLocalDB(dataSource, tweetListNew);
+                    updateMaxTweetId(tweetListNew);
+                    tweetList.addAll(tweetListNew);
+                    response.setData(tweetList);
+                }
+                tweetListObservable.setValue(response);
             }});
     }
 
@@ -66,7 +71,11 @@ public class TweetListRepo extends BaseRepo {
 
     private void updateLocalDB(DataSource dataSource, List<Tweet>  tweets){
         if(!(dataSource instanceof TweetLocalDataSource)){
-            ((TweetLocalDataSource)localDataSource).insertTweets(tweets);
+            ((TweetLocalDataSource)localDataSource).insertTweets(tweets, new DataSource.ResultCallBack<List<Tweet>>(){
+                @Override
+                public void onResultObtained(Response<List<Tweet>> response) {
+
+                }});
         }
     }
 

@@ -3,6 +3,7 @@ package com.amallya.twittermvvm.ui.main;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 import com.amallya.twittermvvm.data.repo.UserCredRepo;
+import com.amallya.twittermvvm.models.Response;
 import com.amallya.twittermvvm.models.User;
 
 
@@ -12,7 +13,7 @@ import com.amallya.twittermvvm.models.User;
 
 public class MainViewModel extends ViewModel {
 
-    private LiveData<User> userCred;
+    private LiveData<Response<User>> userCred;
     UserCredRepo userCredRepo;
 
     public MainViewModel(UserCredRepo userCredRepo) {
@@ -21,7 +22,13 @@ public class MainViewModel extends ViewModel {
         this.userCred = userCredRepo.getUserCredObservable();
     }
 
-    public LiveData<User> getUserCredential(){
+    public LiveData<Response<User>> getUserCredential(){
         return userCred;
     }
+
+    public void clearAccessTokens(){
+        userCredRepo.clearAccessTokens();
+    }
+
 }
+

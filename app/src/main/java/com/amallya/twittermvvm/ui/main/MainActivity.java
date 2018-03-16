@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,15 +23,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.amallya.twittermvvm.ViewModelFactory;
+import com.amallya.twittermvvm.models.Response;
+import com.amallya.twittermvvm.models.Tweet;
 import com.amallya.twittermvvm.ui.tweets.TweetsFragment;
 import com.amallya.twittermvvm.utils.CircularTransform;
 import com.amallya.twittermvvm.R;
-import com.amallya.twittermvvm.RestApplication;
 import com.amallya.twittermvvm.models.User;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,6 +51,8 @@ implements NavigationView.OnNavigationItemSelectedListener {
     ImageView ivNavHeader;
     LinearLayout lvNavHeader;
 
+    MainViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,18 +61,35 @@ implements NavigationView.OnNavigationItemSelectedListener {
         setViews();
         setupFragment(savedInstanceState);
         ViewModelFactory factory = ViewModelFactory.getInstance(getApplication());
-        final MainViewModel viewModel =
+        viewModel =
                 ViewModelProviders.of(this, factory).get(MainViewModel.class);
         observeViewModel(viewModel);
     }
 
     private void observeViewModel(MainViewModel mainViewModel){
-        mainViewModel.getUserCredential().observe(this, new Observer<User>() {
+        mainViewModel.getUserCredential().observe(this, new Observer<Response<User>>() {
             @Override
-            public void onChanged(@Nullable User user) {
-                    processUserCred(user);
+            public void onChanged(@Nullable Response<User> response) {
+                switch(response.getErrorCode()){
+                    case SUCCESS:
+                        handleSuccess(response);
+                        break;
+                    case ERROR:
+                        handleError(response);
+                        break;
+                }
             }
         });
+    }
+
+    private void handleSuccess(Response<User> response){
+       processUserCred(response.getData());
+    }
+
+    private void handleError(Response<User> response){
+        Snackbar mySnackbar = Snackbar.make(findViewById(R.id.drawer_layout),
+                getString(R.string.error_msg), Snackbar.LENGTH_SHORT);
+        mySnackbar.show();
     }
 
     private void setupFragment(Bundle savedInstanceState){
@@ -96,7 +119,6 @@ implements NavigationView.OnNavigationItemSelectedListener {
     }
 
     private void processUserCred(User user){
-        RestApplication.setUser(user);
         tvNavHeader1.setText(user.getName());
         tvNavHeader2.setText(getResources().getString(R.string.screen_name, user.getScreenName()));
         Picasso.with(this)
@@ -133,7 +155,7 @@ implements NavigationView.OnNavigationItemSelectedListener {
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_sign_out) {
-            RestApplication.getRestClient().clearAccessToken();
+            viewModel.clearAccessTokens();
             finish();
         }
         drawer.closeDrawer(GravityCompat.START);
