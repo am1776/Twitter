@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 
 import com.amallya.twittermvvm.ViewModelFactory;
 import com.amallya.twittermvvm.models.Response;
+import com.amallya.twittermvvm.ui.base.BaseFragment;
 import com.amallya.twittermvvm.utils.EndlessRecyclerViewScrollListener;
 import com.amallya.twittermvvm.utils.ItemClickSupport;
 import com.amallya.twittermvvm.R;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class TweetsFragment extends Fragment {
+public class TweetsFragment extends BaseFragment {
 
     private TweetsAdapter tweetsAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -48,14 +49,7 @@ public class TweetsFragment extends Fragment {
         viewModel.getTweetsObservable().observe(this, new Observer<Response<List<Tweet>>>() {
             @Override
             public void onChanged(@Nullable Response<List<Tweet>> response) {
-                switch(response.getErrorCode()){
-                    case SUCCESS:
-                        handleSuccess(response);
-                        break;
-                    case ERROR:
-                        handleError(response);
-                        break;
-                }
+                handleResponse(response);
             }
 
         });
@@ -79,25 +73,21 @@ public class TweetsFragment extends Fragment {
         viewModel.getTweetsActionsObservable().observe(this, new Observer<Response<?>>() {
             @Override
             public void onChanged(@Nullable Response<?> response) {
-                switch(response.getErrorCode()){
-                    case SUCCESS:
-                        // DO nothing
-                        break;
-                    case ERROR:
-                        handleError(response);
-                        break;
-                }
+                    handleResponse(response);
             }
         });
     }
 
-    private void handleSuccess(Response<List<Tweet>> response){
-        tweetsAdapter.setData(response.getData());
+    @Override
+    public void handleSuccess(Response response){
+        List<Tweet> list = (List<Tweet>) response.getData();
+        tweetsAdapter.setData(list);
         avLoadingIndicatorView.hide();
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
-    private void handleError(Response<?> response){
+    @Override
+    public void handleError(Response response){
         Snackbar mySnackbar = Snackbar.make(getView().findViewById(R.id.root1),
                 getString(R.string.error_msg), Snackbar.LENGTH_SHORT);
         mySnackbar.show();

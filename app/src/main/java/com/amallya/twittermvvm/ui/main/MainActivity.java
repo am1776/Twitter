@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.amallya.twittermvvm.ViewModelFactory;
 import com.amallya.twittermvvm.models.Response;
 import com.amallya.twittermvvm.models.Tweet;
+import com.amallya.twittermvvm.ui.base.BaseActivity;
 import com.amallya.twittermvvm.ui.tweets.TweetsFragment;
 import com.amallya.twittermvvm.utils.CircularTransform;
 import com.amallya.twittermvvm.R;
@@ -40,7 +41,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
 implements NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.drawer_layout) DrawerLayout drawer;
@@ -70,23 +71,19 @@ implements NavigationView.OnNavigationItemSelectedListener {
         mainViewModel.getUserCredential().observe(this, new Observer<Response<User>>() {
             @Override
             public void onChanged(@Nullable Response<User> response) {
-                switch(response.getErrorCode()){
-                    case SUCCESS:
-                        handleSuccess(response);
-                        break;
-                    case ERROR:
-                        handleError(response);
-                        break;
-                }
+                handleResponse(response);
             }
         });
     }
 
-    private void handleSuccess(Response<User> response){
-       processUserCred(response.getData());
+    @Override
+    public void handleSuccess(Response response){
+        User user = (User)response.getData();
+        processUserCred(user);
     }
 
-    private void handleError(Response<User> response){
+    @Override
+    public void handleError(Response response){
         Snackbar mySnackbar = Snackbar.make(findViewById(R.id.drawer_layout),
                 getString(R.string.error_msg), Snackbar.LENGTH_SHORT);
         mySnackbar.show();

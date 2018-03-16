@@ -21,6 +21,7 @@ import com.amallya.twittermvvm.ViewModelFactory;
 import com.amallya.twittermvvm.models.Response;
 import com.amallya.twittermvvm.models.Tweet;
 import com.amallya.twittermvvm.models.User;
+import com.amallya.twittermvvm.ui.base.BaseActivity;
 import com.amallya.twittermvvm.ui.main.MainViewModel;
 import com.amallya.twittermvvm.ui.tweets.TweetUserAction;
 import com.amallya.twittermvvm.utils.Consts;
@@ -33,7 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
-public class TweetDetailActivity extends AppCompatActivity {
+public class TweetDetailActivity extends BaseActivity {
 
     @BindView(R.id.iv_profile_pic) ImageButton ivProfilePic;
     @BindView(R.id.iv_reply) ImageButton ivReply;
@@ -78,22 +79,18 @@ public class TweetDetailActivity extends AppCompatActivity {
         tweetDetailViewModel.getTweetsActionsObservable().observe(this, new Observer<Response<?>>() {
             @Override
             public void onChanged(@Nullable Response<?> response) {
-                switch(response.getErrorCode()){
-                    case SUCCESS:
-                        handleSuccess(response);
-                        break;
-                    case ERROR:
-                        handleError(response);
-                        break;
-                }
+                handleResponse(response);
             }
         });
     }
 
-    private void handleSuccess(Response<?> response){
+    @Override
+    public void handleSuccess(Response response){
+
     }
 
-    private void handleError(Response<?> response){
+    @Override
+    public void handleError(Response response){
         Snackbar mySnackbar = Snackbar.make(findViewById(R.id.root),
                 getString(R.string.error_msg), Snackbar.LENGTH_SHORT);
         mySnackbar.show();
