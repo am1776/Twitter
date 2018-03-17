@@ -32,7 +32,7 @@ public class TweetListRepo extends BaseRepo {
         tweetList = new ArrayList<>();
     }
 
-    public LiveData<Response<List<Tweet>>> getTweets(){
+    public LiveData<Response<List<Tweet>>> getTweetsObservable(){
         return tweetListObservable;
     }
 

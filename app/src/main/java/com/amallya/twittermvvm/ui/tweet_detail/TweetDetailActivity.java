@@ -81,7 +81,7 @@ public class TweetDetailActivity extends BaseActivity {
 
     @Override
     public void handleSuccess(Response response){
-
+        // when action has been successfully performed do nothing.
     }
 
     @Override

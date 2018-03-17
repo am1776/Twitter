@@ -3,9 +3,7 @@ package com.amallya.twittermvvm.models;
 import com.google.gson.annotations.SerializedName;
 import org.parceler.Parcel;
 
-/**
- * Created by anmallya on 10/29/2016.
- */
+
 @Parcel
 public class Media{
 

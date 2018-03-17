@@ -19,6 +19,7 @@ public class TweetDetailViewModel extends ViewModel{
 
     private TweetActionsRepo tweetActionsRepo;
 
+
     public TweetDetailViewModel(TweetActionsRepo tweetActionsRepo) {
         super();
         this.tweetActionsRepo = tweetActionsRepo;
@@ -33,6 +34,10 @@ public class TweetDetailViewModel extends ViewModel{
     }
 
     public LiveData<Response<?>> getTweetsActionsObservable(){
+        return tweetActionsRepo.getTweetsActionObservable();
+    }
+
+    public LiveData<Response<?>> getReplyClickedObservable(){
         return tweetActionsRepo.getTweetsActionObservable();
     }
 }

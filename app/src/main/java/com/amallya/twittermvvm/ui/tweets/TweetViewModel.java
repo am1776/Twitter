@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
+import com.amallya.twittermvvm.SingleLiveEvent;
 import com.amallya.twittermvvm.data.repo.TweetActionsRepo;
 import com.amallya.twittermvvm.data.repo.TweetListRepo;
 import com.amallya.twittermvvm.models.Response;
@@ -18,8 +19,8 @@ import java.util.List;
 public class TweetViewModel extends ViewModel{
 
     private LiveData<Response<List<Tweet>>> tweetListObservable;
-    private MutableLiveData<Boolean> isRefreshingObservable;
-    private MutableLiveData<Tweet>  clickedTweetObservable;
+    private SingleLiveEvent<Boolean> isRefreshingObservable;
+    private SingleLiveEvent<Tweet>  clickedTweetObservable;
     private TweetListRepo tweetListRepo;
     private TweetActionsRepo tweetActionsRepo;
 
@@ -27,9 +28,9 @@ public class TweetViewModel extends ViewModel{
         super();
         this.tweetListRepo = tweetListRepo;
         this.tweetActionsRepo = tweetActionsRepo;
-        tweetListObservable = tweetListRepo.getTweets();
-        isRefreshingObservable = new MutableLiveData<>();
-        clickedTweetObservable = new MutableLiveData<>();
+        tweetListObservable = tweetListRepo.getTweetsObservable();
+        isRefreshingObservable = new SingleLiveEvent<>();
+        clickedTweetObservable = new SingleLiveEvent<>();
         loadMoreTweets();
     }
 

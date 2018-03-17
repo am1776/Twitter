@@ -32,9 +32,6 @@ public class TweetsAdapter extends
         RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Tweet> tweetList = null;
-    private Context getContext() {
-        return mContext;
-    }
     private Context mContext;
     private TweetViewModel tweetViewModel;
 
@@ -42,6 +39,10 @@ public class TweetsAdapter extends
         this.tweetList = tweetList;
         this.mContext = context;
         this.tweetViewModel = tweetViewModel;
+    }
+
+    private Context getContext() {
+        return mContext;
     }
 
     public void setData(List<Tweet> tweetList){
