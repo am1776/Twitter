@@ -46,36 +46,17 @@ public class TweetsFragment extends BaseFragment {
     }
 
     private void observeViewModels(){
-        viewModel.getTweetsObservable().observe(this, new Observer<Response<List<Tweet>>>() {
-            @Override
-            public void onChanged(@Nullable Response<List<Tweet>> response) {
-                handleResponse(response);
-            }
+        viewModel.getTweetsObservable().observe(this, response -> handleResponse(response));
 
+        viewModel.getRefreshingObservable().observe(this, aBoolean -> tweetsAdapter.notifyDataSetChanged());
+
+        viewModel.getSelectedTweetObservable().observe(this, tweet -> {
+            Intent intent = new Intent(getActivity(), TweetDetailActivity.class);
+            intent.putExtra(TweetDetailActivity.TWEET_EXTRA, Parcels.wrap(tweet));
+            startActivity(intent);
         });
 
-        viewModel.getRefreshingObservable().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(@Nullable Boolean aBoolean) {
-                tweetsAdapter.notifyDataSetChanged();
-            }
-        });
-
-        viewModel.getSelectedTweetObservable().observe(this, new Observer<Tweet>() {
-            @Override
-            public void onChanged(@Nullable Tweet tweet) {
-                Intent intent = new Intent(getActivity(), TweetDetailActivity.class);
-                intent.putExtra(TweetDetailActivity.TWEET_EXTRA, Parcels.wrap(tweet));
-                startActivity(intent);
-            }
-        });
-
-        viewModel.getTweetsActionsObservable().observe(this, new Observer<Response<?>>() {
-            @Override
-            public void onChanged(@Nullable Response<?> response) {
-                    handleResponse(response);
-            }
-        });
+        viewModel.getTweetsActionsObservable().observe(this, response -> handleResponse(response));
     }
 
     @Override
@@ -122,12 +103,7 @@ public class TweetsFragment extends BaseFragment {
 
     private void setSwipeRefreshLayout(){
         mSwipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swipeRefreshLayout);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                viewModel.refreshTweets();
-            }
-        });
+        mSwipeRefreshLayout.setOnRefreshListener(() -> viewModel.refreshTweets());
     }
 
     private void setRecyclerView(){
@@ -144,12 +120,7 @@ public class TweetsFragment extends BaseFragment {
             }
         });
         ItemClickSupport.addTo(rv).setOnItemClickListener(
-                new ItemClickSupport.OnItemClickListener() {
-                    @Override
-                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                            viewModel.onTweetClicked(position);
-                        }
-                    }
+                (recyclerView, position, v) -> viewModel.onTweetClicked(position)
         );
     }
 }

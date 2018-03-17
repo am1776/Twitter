@@ -20,7 +20,7 @@ import java.util.List;
 public class TweetListRepo extends BaseRepo {
 
     private DataSource localDataSource, remoteDataSource;
-    final MutableLiveData<Response<List<Tweet>>> tweetListObservable;
+    private final MutableLiveData<Response<List<Tweet>>> tweetListObservable;
     private static final int TWEET_ID_MAX_DEFAULT = -1;
     private long maxTweetId = TWEET_ID_MAX_DEFAULT;
     private List<Tweet> tweetList;
@@ -71,11 +71,8 @@ public class TweetListRepo extends BaseRepo {
 
     private void updateLocalDB(DataSource dataSource, List<Tweet>  tweets){
         if(!(dataSource instanceof TweetLocalDataSource)){
-            ((TweetLocalDataSource)localDataSource).insertTweets(tweets, new DataSource.ResultCallBack<List<Tweet>>(){
-                @Override
-                public void onResultObtained(Response<List<Tweet>> response) {
-
-                }});
+            ((TweetLocalDataSource)localDataSource).insertTweets(tweets, response -> {
+            });
         }
     }
 

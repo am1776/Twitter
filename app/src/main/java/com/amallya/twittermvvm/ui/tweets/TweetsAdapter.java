@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.amallya.twittermvvm.models.DisplayType;
 import com.amallya.twittermvvm.utils.Consts;
 import com.amallya.twittermvvm.utils.PatternEditableBuilder;
 import com.amallya.twittermvvm.R;
@@ -21,6 +22,7 @@ import java.util.regex.Pattern;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 /**
  * Created by anmallya on 3/10/2018.
@@ -87,12 +89,7 @@ public class TweetsAdapter extends
         vh.getTvTweet().setText(tweet.getText());
         new PatternEditableBuilder().
                 addPattern(Pattern.compile("\\@(\\w+)"), getContext().getResources().getColor(R.color.linkBlue),
-                        new PatternEditableBuilder.SpannableClickedListener() {
-                            @Override
-                            public void onSpanClicked(String text) {
-
-                            }
-                        }).into(vh.getTvTweet());
+                        text -> {}).into(vh.getTvTweet());
         vh.getTvCreatedTime().setText(Utils.getTwitterDate(tweet.getCreatedAt()));
         vh.getTvLikeCount().setText(tweet.getFavouritesCount()+"");
         vh.getTvRetweetCount().setText(tweet.getRetweetCount()+"");
@@ -135,56 +132,42 @@ public class TweetsAdapter extends
     }
 
     private void setToggleListners(final TweetListViewHolder vh,final  Tweet tweet){
-        (vh.getIvLike()).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View arg0) {
-                tweet.setFavorited(!tweet.isFavorited());
-                if(tweet.isFavorited()) {
-                    tweetViewModel.userActionOnTweet(TweetUserAction.FAVORITE, tweet.getId());
-                    vh.getTvLikeCount().setText(tweet.getFavouritesCount()+1+"");
-                    vh.getTvLikeCount().setTextColor(getContext().getResources().getColor(R.color.favRed));
-                } else {
-                    tweetViewModel.userActionOnTweet(TweetUserAction.UNFAVORITE, tweet.getId());
-                    vh.getTvLikeCount().setText(tweet.getFavouritesCount()-1+"");
-                    vh.getTvLikeCount().setTextColor(getContext().getResources().getColor(R.color.darkGrey));
-                }
+        (vh.getIvLike()).setOnClickListener(view -> {
+            tweet.setFavorited(!tweet.isFavorited());
+            if(tweet.isFavorited()) {
+                tweetViewModel.userActionOnTweet(TweetUserAction.FAVORITE, tweet.getId());
+                vh.getTvLikeCount().setText(tweet.getFavouritesCount()+1+"");
+                vh.getTvLikeCount().setTextColor(getContext().getResources().getColor(R.color.favRed));
+            } else {
+                tweetViewModel.userActionOnTweet(TweetUserAction.UNFAVORITE, tweet.getId());
+                vh.getTvLikeCount().setText(tweet.getFavouritesCount()-1+"");
+                vh.getTvLikeCount().setTextColor(getContext().getResources().getColor(R.color.darkGrey));
             }
         });
 
-        (vh.getIvRetweet()).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View arg0) {
-                tweet.setRetweeted(!tweet.isRetweeted());
-                if(tweet.isRetweeted()) {
-                    tweetViewModel.userActionOnTweet(TweetUserAction.RETWEET, tweet.getId());
-                    vh.getTvRetweetCount().setText(tweet.getRetweetCount()+1+"");
-                    vh.getTvRetweetCount().setTextColor(getContext().getResources().getColor(R.color.retweetGreen));
-                } else {
-                    tweetViewModel.userActionOnTweet(TweetUserAction.UNRETWEET, tweet.getId());
-                    vh.getTvRetweetCount().setText(tweet.getRetweetCount()-1+"");
-                    vh.getTvRetweetCount().setTextColor(getContext().getResources().getColor(R.color.darkGrey));
-                }
+        (vh.getIvRetweet()).setOnClickListener(arg0 -> {
+            tweet.setRetweeted(!tweet.isRetweeted());
+            if(tweet.isRetweeted()) {
+                tweetViewModel.userActionOnTweet(TweetUserAction.RETWEET, tweet.getId());
+                vh.getTvRetweetCount().setText(tweet.getRetweetCount()+1+"");
+                vh.getTvRetweetCount().setTextColor(getContext().getResources().getColor(R.color.retweetGreen));
+            } else {
+                tweetViewModel.userActionOnTweet(TweetUserAction.UNRETWEET, tweet.getId());
+                vh.getTvRetweetCount().setText(tweet.getRetweetCount()-1+"");
+                vh.getTvRetweetCount().setTextColor(getContext().getResources().getColor(R.color.darkGrey));
             }
         });
     }
-
 
 
     private void setButtonVisibility(Tweet tweet, TweetListViewHolder vh){
-        switch(tweet.getDisplayType()){
-            case MESSAGE:
-                vh.getIvRetweet().setVisibility(GONE);
-                vh.getTvLikeCount().setVisibility(GONE);
-                vh.getTvRetweetCount().setVisibility(GONE);
-                vh.getIvDirectMsg().setVisibility(GONE);
-                vh.getIvLike().setVisibility(GONE);
-                vh.getIvReply().setVisibility(GONE);
-                break;
-            default:
-                vh.getIvRetweet().setVisibility(View.VISIBLE);
-                vh.getTvLikeCount().setVisibility(View.VISIBLE);
-                vh.getTvRetweetCount().setVisibility(View.VISIBLE);
-                vh.getIvDirectMsg().setVisibility(View.VISIBLE);
-                vh.getIvLike().setVisibility(View.VISIBLE);
-                vh.getIvReply().setVisibility(View.VISIBLE);
-        }
+            int visibility = tweet.getDisplayType() == DisplayType.MESSAGE ? GONE: VISIBLE;
+            vh.getIvRetweet().setVisibility(visibility);
+            vh.getTvLikeCount().setVisibility(visibility);
+            vh.getTvRetweetCount().setVisibility(visibility);
+            vh.getIvDirectMsg().setVisibility(visibility);
+            vh.getIvLike().setVisibility(visibility);
+            vh.getIvReply().setVisibility(visibility);
     }
+
 }

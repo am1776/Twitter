@@ -15,13 +15,10 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent newActivityIntent = new Intent(SplashActivity.this, LoginActivity.class);
-                startActivity(newActivityIntent);
-                finish();
-            }
+        new Handler().postDelayed(() -> {
+            Intent newActivityIntent = new Intent(SplashActivity.this, LoginActivity.class);
+            startActivity(newActivityIntent);
+            finish();
         }, SPLASH_DURATION);
     }
 }

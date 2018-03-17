@@ -76,12 +76,7 @@ public class TweetDetailActivity extends BaseActivity {
     }
 
     private void observeViewModel(TweetDetailViewModel tweetDetailViewModel){
-        tweetDetailViewModel.getTweetsActionsObservable().observe(this, new Observer<Response<?>>() {
-            @Override
-            public void onChanged(@Nullable Response<?> response) {
-                handleResponse(response);
-            }
-        });
+        tweetDetailViewModel.getTweetsActionsObservable().observe(this, response -> handleResponse(response));
     }
 
     @Override
@@ -122,12 +117,9 @@ public class TweetDetailActivity extends BaseActivity {
             ivMedia.setVisibility(View.GONE);
         }
         final String screenName = tweet.getUser().getScreenName();
-        etReply.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
-                    etReply.setText("@"+screenName+" ");
-                }
+        etReply.setOnFocusChangeListener((v, hasFocus) -> {
+            if(hasFocus){
+                etReply.setText("@"+screenName+" ");
             }
         });
         Glide.with(this).load(tweet.getUser().getProfileImageUrl())
@@ -141,31 +133,27 @@ public class TweetDetailActivity extends BaseActivity {
     }
 
     private void setToggleButtons(){
-        ivLike.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    viewModel.userActionOnTweet(TweetUserAction.FAVORITE, tweet.getId());
-                    tvLikeCount.setText(tweet.getFavouritesCount()+1+"");
-                    tvLikeCount.setTextColor(getResources().getColor(R.color.favRed));
-                } else {
-                    viewModel.userActionOnTweet(TweetUserAction.UNFAVORITE, tweet.getId());
-                    tvLikeCount.setText(tweet.getFavouritesCount()-1+"");
-                    tvLikeCount.setTextColor(getResources().getColor(R.color.darkGrey));
-                }
+        ivLike.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                viewModel.userActionOnTweet(TweetUserAction.FAVORITE, tweet.getId());
+                tvLikeCount.setText(tweet.getFavouritesCount()+1+"");
+                tvLikeCount.setTextColor(getResources().getColor(R.color.favRed));
+            } else {
+                viewModel.userActionOnTweet(TweetUserAction.UNFAVORITE, tweet.getId());
+                tvLikeCount.setText(tweet.getFavouritesCount()-1+"");
+                tvLikeCount.setTextColor(getResources().getColor(R.color.darkGrey));
             }
         });
 
-        ivRetweet.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    viewModel.userActionOnTweet(TweetUserAction.RETWEET, tweet.getId());
-                    tvRetweetCount.setText(tweet.getRetweetCount()+1+"");
-                    tvRetweetCount.setTextColor(getResources().getColor(R.color.retweetGreen));
-                } else {
-                    viewModel.userActionOnTweet(TweetUserAction.UNRETWEET, tweet.getId());
-                    tvRetweetCount.setText(tweet.getRetweetCount()-1+"");
-                    tvRetweetCount.setTextColor(getResources().getColor(R.color.darkGrey));
-                }
+        ivRetweet.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                viewModel.userActionOnTweet(TweetUserAction.RETWEET, tweet.getId());
+                tvRetweetCount.setText(tweet.getRetweetCount()+1+"");
+                tvRetweetCount.setTextColor(getResources().getColor(R.color.retweetGreen));
+            } else {
+                viewModel.userActionOnTweet(TweetUserAction.UNRETWEET, tweet.getId());
+                tvRetweetCount.setText(tweet.getRetweetCount()-1+"");
+                tvRetweetCount.setTextColor(getResources().getColor(R.color.darkGrey));
             }
         });
     }

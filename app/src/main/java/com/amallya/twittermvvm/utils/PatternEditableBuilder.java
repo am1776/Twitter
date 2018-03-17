@@ -14,6 +14,10 @@ import java.util.regex.Pattern;
 
 /**
  * Created by anmallya on 3/10/2018.
+ *
+ * Source:
+ * https://gist.github.com/nesquena/f2504c642c5de47b371278ee61c75124
+ *
  */
 
 public class PatternEditableBuilder {

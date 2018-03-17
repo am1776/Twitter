@@ -36,21 +36,13 @@ public class UserCredRepo extends BaseRepo {
 
     public LiveData<Response<User>> getUserCredObservable(){
         final MutableLiveData<Response<User>> data = new MutableLiveData<>();
-        ((TweetRemoteDataSource) dataSource).getUserCred(new DataSource.ResultCallBack<User>() {
-            @Override
-            public void onResultObtained(Response<User> response) {
-                data.setValue(response);
-            }
-        });
+        ((TweetRemoteDataSource) dataSource).getUserCred(response -> data.setValue(response));
         return data;
     }
 
     public void clearAccessTokens(){
-        ((TweetRemoteDataSource) dataSource).clearAccessToken(new DataSource.ResultCallBack(){
-            @Override
-            public void onResultObtained(Response response) {
+        ((TweetRemoteDataSource) dataSource).clearAccessToken(response -> {
 
-            }
         });
     }
 }

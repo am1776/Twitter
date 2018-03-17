@@ -37,23 +37,13 @@ public class TweetActionsRepo extends BaseRepo{
     public void userActionOnTweet(final TweetUserAction tweetUserAction, long tweetId){
         Request request = new Request();
         request.setId(tweetId);
-        ((TweetRemoteDataSource)dataSource).takeActionOnTweet(tweetUserAction, request, new TweetRemoteDataSource.ResultCallBack() {
-            @Override
-            public void onResultObtained(Response response) {
-                tweetActionsObservable.setValue(response);
-            }
-        } );
+        ((TweetRemoteDataSource)dataSource).takeActionOnTweet(tweetUserAction, request, response -> tweetActionsObservable.setValue(response));
     }
 
     public void userReplyOnTweet(TweetUserAction tweetUserAction, String tweetResponse, long tweetId){
         Request request = new Request();
         request.setId(tweetId);
         request.setMessage(tweetResponse);
-        ((TweetRemoteDataSource)dataSource).takeActionOnTweet(tweetUserAction, request, new TweetRemoteDataSource.ResultCallBack() {
-            @Override
-            public void onResultObtained(Response response) {
-                tweetActionsObservable.setValue(response);
-            }
-        });
+        ((TweetRemoteDataSource)dataSource).takeActionOnTweet(tweetUserAction, request, response -> tweetActionsObservable.setValue(response));
     }
 }

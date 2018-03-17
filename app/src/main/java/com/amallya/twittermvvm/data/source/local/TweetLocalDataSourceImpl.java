@@ -29,41 +29,25 @@ public class TweetLocalDataSourceImpl implements TweetLocalDataSource<DataSource
 
     @Override
     public void insertTweets(final List<Tweet> newTweets, ResultCallBack resultCallBack) {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                TweetsDatabase.getInstance(context).tweetDao().insertTweets(newTweets);
-            }
-        };
+        Runnable runnable = () -> TweetsDatabase.getInstance(context).tweetDao().insertTweets(newTweets);
         appExecutors.diskIO().execute(runnable);
     }
 
     @Override
     public void deleteAllTweets(ResultCallBack resultCallBack) {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                TweetsDatabase.getInstance(context).tweetDao().deleteAllTweets();
-            }
-        };
+        Runnable runnable = () -> TweetsDatabase.getInstance(context).tweetDao().deleteAllTweets();
         appExecutors.diskIO().execute(runnable);
     }
 
     @Override
     public void getTweets(long max, final ResultCallBack callBack) {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                final List<Tweet> tweets = TweetsDatabase.getInstance(context).tweetDao().getAllTweets();
-                appExecutors.mainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        Response<List<Tweet>> response = new Response(GENERIC_SUCCESS_MSG, SUCCESS);
-                        response.setData(tweets);
-                        callBack.onResultObtained(response);
-                    }
-                });
-            }
+        Runnable runnable = () -> {
+            final List<Tweet> tweets = TweetsDatabase.getInstance(context).tweetDao().getAllTweets();
+            appExecutors.mainThread().execute(() -> {
+                Response<List<Tweet>> response = new Response(GENERIC_SUCCESS_MSG, SUCCESS);
+                response.setData(tweets);
+                callBack.onResultObtained(response);
+            });
         };
         appExecutors.diskIO().execute(runnable);
     }

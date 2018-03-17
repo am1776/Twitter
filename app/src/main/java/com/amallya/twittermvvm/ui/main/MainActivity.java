@@ -68,12 +68,7 @@ implements NavigationView.OnNavigationItemSelectedListener {
     }
 
     private void observeViewModel(MainViewModel mainViewModel){
-        mainViewModel.getUserCredential().observe(this, new Observer<Response<User>>() {
-            @Override
-            public void onChanged(@Nullable Response<User> response) {
-                handleResponse(response);
-            }
-        });
+        mainViewModel.getUserCredential().observe(this, response -> handleResponse(response));
     }
 
     @Override
