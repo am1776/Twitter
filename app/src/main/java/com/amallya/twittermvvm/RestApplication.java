@@ -13,15 +13,8 @@ import com.amallya.twittermvvm.data.source.remote.TwitterClient;
  */
 
 public class RestApplication extends Application {
+
     private static Context context;
-
-    public static User getUser() {
-        return user;
-    }
-
-    public static void setUser(User user) {
-        RestApplication.user = user;
-    }
 
     private static User user;
 
@@ -34,9 +27,13 @@ public class RestApplication extends Application {
     public static TwitterClient getRestClient() {
         return (TwitterClient) TwitterClient.getInstance(TwitterClient.class, RestApplication.context);
     }
+    
+    public static User getUser() {
+        return user;
+    }
 
-    public static Context getContext(){
-        return context;
+    public static void setUser(User user) {
+        RestApplication.user = user;
     }
 
 }

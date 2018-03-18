@@ -44,6 +44,6 @@ public class TweetActionsRepo extends BaseRepo{
         Request request = new Request();
         request.setId(tweetId);
         request.setMessage(tweetResponse);
-        ((TweetRemoteDataSource)dataSource).takeActionOnTweet(tweetUserAction, request, response -> tweetActionsObservable.setValue(response));
+        ((TweetRemoteDataSource)dataSource).takeActionOnTweet(tweetUserAction, request, response -> {});
     }
 }

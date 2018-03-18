@@ -163,5 +163,4 @@ public class TweetDetailActivity extends BaseActivity {
         etReply.setText(BLANK_TEXT);
         viewModel.userReplyOnTweet(TweetUserAction.REPLY, tweet.getId(), tweetResponse);
     }
-
 }

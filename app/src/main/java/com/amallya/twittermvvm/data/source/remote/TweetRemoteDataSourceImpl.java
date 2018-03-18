@@ -98,7 +98,7 @@ public class TweetRemoteDataSourceImpl implements TweetRemoteDataSource<DataSour
                 client.postFavorite(request.getId(), handler);
                 break;
             case UNFAVORITE:
-                client.postUnRetweet(request.getId(), handler);
+                client.postUnFavorite(request.getId(), handler);
                 break;
             case RETWEET:
                 client.postRetweet(request.getId(), handler);
@@ -106,6 +106,8 @@ public class TweetRemoteDataSourceImpl implements TweetRemoteDataSource<DataSour
             case UNRETWEET:
                 client.postUnRetweet(request.getId(), handler);
                 break;
+            case REPLY:
+                client.postReply(request.getMessage(), request.getId(), handler);
         }
     }
 
@@ -126,5 +128,4 @@ public class TweetRemoteDataSourceImpl implements TweetRemoteDataSource<DataSour
         JsonObject jObject = tweetElement.getAsJsonObject();
         return gson.fromJson(jObject, User.class);
     }
-
 }
