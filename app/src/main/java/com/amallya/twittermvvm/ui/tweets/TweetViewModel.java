@@ -1,16 +1,11 @@
 package com.amallya.twittermvvm.ui.tweets;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-
-import com.amallya.twittermvvm.SingleLiveEvent;
 import com.amallya.twittermvvm.data.repo.TweetActionsRepo;
 import com.amallya.twittermvvm.data.repo.TweetListRepo;
 import com.amallya.twittermvvm.models.Response;
 import com.amallya.twittermvvm.models.Tweet;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,37 +13,33 @@ import java.util.List;
  */
 public class TweetViewModel extends ViewModel{
 
-    private LiveData<Response<List<Tweet>>> tweetListObservable;
-    private SingleLiveEvent<Boolean> isRefreshingObservable;
-    private SingleLiveEvent<Tweet>  clickedTweetObservable;
-    private TweetListRepo tweetListRepo;
-    private TweetActionsRepo tweetActionsRepo;
+    private final TweetListRepo tweetListRepo;
+    private final TweetActionsRepo tweetActionsRepo;
 
     public TweetViewModel(TweetListRepo tweetListRepo, TweetActionsRepo tweetActionsRepo) {
-        super();
         this.tweetListRepo = tweetListRepo;
         this.tweetActionsRepo = tweetActionsRepo;
-        tweetListObservable = tweetListRepo.getTweetsObservable();
-        isRefreshingObservable = new SingleLiveEvent<>();
-        clickedTweetObservable = new SingleLiveEvent<>();
         loadMoreTweets();
     }
 
     public LiveData<Response<List<Tweet>>> getTweetsObservable(){
-        return tweetListObservable;
+        return tweetListRepo.getTweetsObservable();
     }
 
     public LiveData<Boolean> getRefreshingObservable(){
-        return isRefreshingObservable;
+        return tweetListRepo.getRefreshingObservable();
+    }
+
+    public LiveData<Response<?>> getTweetsActionsObservable(){
+        return tweetActionsRepo.getTweetsActionObservable();
     }
 
     public LiveData<Tweet> getSelectedTweetObservable(){
-        return clickedTweetObservable;
+        return tweetListRepo.getSelectedTweetObservable();
     }
 
     public void refreshTweets(){
         tweetListRepo.refreshTweets();
-        isRefreshingObservable.setValue(true);
     }
 
     public void loadMoreTweets(){
@@ -60,10 +51,7 @@ public class TweetViewModel extends ViewModel{
     }
 
     public void onTweetClicked(int position){
-        clickedTweetObservable.setValue(tweetListRepo.fetchSelectedTweet(position));
+        tweetListRepo.onTweetClicked(position);
     }
 
-    public LiveData<Response<?>> getTweetsActionsObservable(){
-        return tweetActionsRepo.getTweetsActionObservable();
-    }
 }

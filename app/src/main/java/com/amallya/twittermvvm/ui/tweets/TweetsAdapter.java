@@ -32,8 +32,8 @@ public class TweetsAdapter extends
         RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Tweet> tweetList = null;
-    private Context mContext;
-    private TweetViewModel tweetViewModel;
+    private final Context mContext;
+    private final TweetViewModel tweetViewModel;
 
     public TweetsAdapter(Context context, List<Tweet> tweetList, TweetViewModel tweetViewModel) {
         this.tweetList = tweetList;

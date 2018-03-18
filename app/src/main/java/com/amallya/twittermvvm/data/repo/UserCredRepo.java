@@ -39,7 +39,6 @@ public class UserCredRepo extends BaseRepo {
         this.dataSource = dataSource;
         isAccessTokenClearedObservable = new SingleLiveEvent<>();
         userCredObservable = new MutableLiveData<>();
-        fetchUserCred();
     }
 
     public LiveData<Response<User>> getUserCredObservable(){

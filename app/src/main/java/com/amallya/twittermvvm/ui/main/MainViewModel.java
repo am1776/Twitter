@@ -18,6 +18,7 @@ public class MainViewModel extends ViewModel {
     public MainViewModel(UserCredRepo userCredRepo) {
         super();
         this.userCredRepo = userCredRepo;
+        this.userCredRepo.fetchUserCred();
     }
 
     public LiveData<Response<User>> getUserCredentialObservable(){

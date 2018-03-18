@@ -3,6 +3,7 @@ package com.amallya.twittermvvm.data.repo;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 
+import com.amallya.twittermvvm.SingleLiveEvent;
 import com.amallya.twittermvvm.data.source.DataSource;
 import com.amallya.twittermvvm.data.source.local.TweetLocalDataSource;
 import com.amallya.twittermvvm.data.source.local.TweetLocalDataSourceImpl;
@@ -19,21 +20,49 @@ import java.util.List;
 
 public class TweetListRepo extends BaseRepo {
 
-    private DataSource localDataSource, remoteDataSource;
+    private final DataSource localDataSource, remoteDataSource;
+    private final SingleLiveEvent<Tweet>  clickedTweetObservable;
+    private final SingleLiveEvent<Boolean> isRefreshingObservable;
     private final MutableLiveData<Response<List<Tweet>>> tweetListObservable;
     private static final int TWEET_ID_MAX_DEFAULT = -1;
     private long maxTweetId = TWEET_ID_MAX_DEFAULT;
-    private List<Tweet> tweetList;
+    private final List<Tweet> tweetList;
 
     public TweetListRepo(DataSource localDataSource, DataSource remoteDataSource){
         this.localDataSource = localDataSource;
         this.remoteDataSource = remoteDataSource;
-        tweetListObservable = new MutableLiveData<>();;
+        this.tweetListObservable = new MutableLiveData<>();
         tweetList = new ArrayList<>();
+        this.clickedTweetObservable = new SingleLiveEvent<>();
+        this.isRefreshingObservable = new SingleLiveEvent<>();
     }
 
     public LiveData<Response<List<Tweet>>> getTweetsObservable(){
         return tweetListObservable;
+    }
+
+
+    public LiveData<Tweet> getSelectedTweetObservable(){
+        return clickedTweetObservable;
+    }
+
+    public LiveData<Boolean> getRefreshingObservable(){
+        return isRefreshingObservable;
+    }
+
+    public void refreshTweets(){
+        tweetList.clear();
+        resetMaxTweetId();
+        fetchTweets();
+        isRefreshingObservable.setValue(true);
+    }
+
+    public void loadMoreTweets(){
+        fetchTweets();
+    }
+
+    public void onTweetClicked(int position){
+        clickedTweetObservable.setValue(fetchSelectedTweet(position));
     }
 
     private void fetchTweets(){
@@ -52,21 +81,14 @@ public class TweetListRepo extends BaseRepo {
             }});
     }
 
-    public void refreshTweets(){
-        tweetList.clear();
-        maxTweetId = TWEET_ID_MAX_DEFAULT;
-        fetchTweets();
-    }
-
-    public void loadMoreTweets(){
-        fetchTweets();
-    }
-
-
     private void updateMaxTweetId(List<Tweet> tweetListNew){
         if (tweetListNew.size() > 0){
             maxTweetId = tweetListNew.get(tweetListNew.size() - 1).getId();
         }
+    }
+
+    private void resetMaxTweetId(){
+        maxTweetId = TWEET_ID_MAX_DEFAULT;
     }
 
     private void updateLocalDB(DataSource dataSource, List<Tweet>  tweets){
@@ -76,11 +98,11 @@ public class TweetListRepo extends BaseRepo {
         }
     }
 
-    public Tweet fetchSelectedTweet(int position){
+    private  Tweet fetchSelectedTweet(int position){
         return tweetList.get(position);
     }
 
     private boolean isConnectedToInternet(){
-        return true;
+        return false;
     }
 }

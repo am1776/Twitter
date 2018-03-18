@@ -1,5 +1,8 @@
 package com.amallya.twittermvvm.utils;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+
 import com.amallya.twittermvvm.data.source.remote.InternetAvailability;
 
 import java.net.InetAddress;
@@ -12,7 +15,6 @@ public class NetworkUtil {
     private static boolean isInternetAvailableHelper() {
         try {
             InetAddress ipAddr = InetAddress.getByName("google.com");
-            //You can replace it with your name
             return !ipAddr.equals("");
 
         } catch (Exception e) {
@@ -24,9 +26,10 @@ public class NetworkUtil {
         (new AppExecutors()).networkIO().execute(new Runnable() {
             @Override
             public void run() {
-                        boolean status = isInternetAvailableHelper()? true: false;
-                        callback.internetStatus(status);
+                boolean status = isInternetAvailableHelper()? true: false;
+                callback.internetStatus(status);
             }
-            });}
+            });
+    }
 }
 
