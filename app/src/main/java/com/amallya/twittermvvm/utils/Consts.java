@@ -19,6 +19,11 @@ public class Consts {
     public static final int RL = 20; // Radius Large
     public static final int RS = 3; // Radius Small
 
+    public static final int TOOLBAR_HEIGHT = 5; // Radius Small
+
+    public static final int NAV_HEADER_HEIGHT = 500;
+    public static final int NAV_HEADER_WIDTH = 500;
+
     public static final int[]  imageResId = {
             R.drawable.ic_tab_home,
             R.drawable.ic_tab_moments,

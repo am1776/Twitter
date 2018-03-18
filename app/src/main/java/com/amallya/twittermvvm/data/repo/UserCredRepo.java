@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 import com.amallya.twittermvvm.RestApplication;
+import com.amallya.twittermvvm.SingleLiveEvent;
 import com.amallya.twittermvvm.data.source.DataSource;
 import com.amallya.twittermvvm.data.source.remote.TweetRemoteDataSource;
 import com.amallya.twittermvvm.data.source.remote.TweetRemoteDataSourceImpl;
@@ -20,6 +21,8 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import javax.xml.transform.Result;
+
 import cz.msebera.android.httpclient.Header;
 
 /**
@@ -28,21 +31,32 @@ import cz.msebera.android.httpclient.Header;
 
 public class UserCredRepo extends BaseRepo {
 
-    private DataSource dataSource;
+    private final DataSource dataSource;
+    private final SingleLiveEvent<Boolean> isAccessTokenClearedObservable;
+    private final MutableLiveData<Response<User>> userCredObservable;
 
     public UserCredRepo(DataSource dataSource){
         this.dataSource = dataSource;
+        isAccessTokenClearedObservable = new SingleLiveEvent<>();
+        userCredObservable = new MutableLiveData<>();
+        fetchUserCred();
     }
 
     public LiveData<Response<User>> getUserCredObservable(){
-        final MutableLiveData<Response<User>> data = new MutableLiveData<>();
-        ((TweetRemoteDataSource) dataSource).getUserCred(response -> data.setValue(response));
-        return data;
+        return userCredObservable;
+    }
+
+    public void fetchUserCred(){
+        ((TweetRemoteDataSource) dataSource).getUserCred(response -> userCredObservable.setValue(response));
+    }
+
+    public LiveData<Boolean> getAccessTokenClearedObservable(){
+        return isAccessTokenClearedObservable;
     }
 
     public void clearAccessTokens(){
         ((TweetRemoteDataSource) dataSource).clearAccessToken(response -> {
-
+            isAccessTokenClearedObservable.setValue(true);
         });
     }
 }

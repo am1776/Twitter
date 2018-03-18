@@ -44,14 +44,12 @@ public class TweetDetailActivity extends BaseActivity {
     @BindView(R.id.iv_media) ImageView ivMedia;
     @BindView(R.id.et_reply) EditText etReply;
     @BindView(R.id.toolbar) Toolbar toolbar;
-
     @BindView(R.id.tv_profile_name) TextView tvProfileName;
     @BindView(R.id.tv_profile_handle) TextView tvProfileHandler;
     @BindView(R.id.tv_created_time) TextView tvCreatedTime;
     @BindView(R.id.tv_tweet) TextView tvTweet;
     @BindView(R.id.tv_retweet_count) TextView tvRetweetCount;
     @BindView(R.id.tv_like_count) TextView tvLikeCount;
-
     @BindView(R.id.root) RelativeLayout relativeLayout;
 
     private Tweet tweet;
@@ -66,13 +64,17 @@ public class TweetDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tweet_detail);
         ButterKnife.bind(this);
+        setupViewModel();
+        setupToolbar();
+        tweet = Parcels.unwrap(getIntent().getParcelableExtra(TWEET_EXTRA));
+        setupViews(tweet);
+    }
+
+    private void setupViewModel(){
         ViewModelFactory factory = ViewModelFactory.getInstance(getApplication());
         viewModel =
                 ViewModelProviders.of(this, factory).get(TweetDetailViewModel.class);
         observeViewModel(viewModel);
-        setupToolbar();
-        tweet = Parcels.unwrap(getIntent().getParcelableExtra(TWEET_EXTRA));
-        setupViews(tweet);
     }
 
     private void observeViewModel(TweetDetailViewModel tweetDetailViewModel){
@@ -81,14 +83,12 @@ public class TweetDetailActivity extends BaseActivity {
 
     @Override
     public void handleSuccess(Response response){
-        // when action has been successfully performed do nothing.
+        showSnackBar(R.id.root, getString(R.string.success_msg));
     }
 
     @Override
     public void handleError(Response response){
-        Snackbar mySnackbar = Snackbar.make(findViewById(R.id.root),
-                getString(R.string.error_msg), Snackbar.LENGTH_SHORT);
-        mySnackbar.show();
+       showSnackBar(R.id.root, getString(R.string.error_msg));
     }
 
     private void setupViews(final Tweet tweet) {
@@ -105,7 +105,6 @@ public class TweetDetailActivity extends BaseActivity {
         setToggleButtons();
         setImages();
     }
-
 
     private void setImages(){
         if((tweet.getEntities().getMedia()!=null) && (tweet.getEntities().getMedia().size() > 0)){
@@ -129,7 +128,7 @@ public class TweetDetailActivity extends BaseActivity {
 
     private void setupToolbar(){
         setSupportActionBar(toolbar);
-        getSupportActionBar().setElevation(5);
+        getSupportActionBar().setElevation(Consts.TOOLBAR_HEIGHT);
     }
 
     private void setToggleButtons(){

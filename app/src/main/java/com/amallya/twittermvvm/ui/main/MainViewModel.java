@@ -13,22 +13,23 @@ import com.amallya.twittermvvm.models.User;
 
 public class MainViewModel extends ViewModel {
 
-    private LiveData<Response<User>> userCred;
-    UserCredRepo userCredRepo;
+    private UserCredRepo userCredRepo;
 
     public MainViewModel(UserCredRepo userCredRepo) {
         super();
         this.userCredRepo = userCredRepo;
-        this.userCred = userCredRepo.getUserCredObservable();
     }
 
-    public LiveData<Response<User>> getUserCredential(){
-        return userCred;
+    public LiveData<Response<User>> getUserCredentialObservable(){
+        return userCredRepo.getUserCredObservable();
     }
 
     public void clearAccessTokens(){
         userCredRepo.clearAccessTokens();
     }
 
+    public LiveData<Boolean> getAccessTokenClearedObservable(){
+        return userCredRepo.getAccessTokenClearedObservable();
+    }
 }
 

@@ -30,6 +30,7 @@ import com.amallya.twittermvvm.ui.tweets.TweetsFragment;
 import com.amallya.twittermvvm.utils.CircularTransform;
 import com.amallya.twittermvvm.R;
 import com.amallya.twittermvvm.models.User;
+import com.amallya.twittermvvm.utils.Consts;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -51,7 +52,6 @@ implements NavigationView.OnNavigationItemSelectedListener {
     TextView tvNavHeader1, tvNavHeader2;
     ImageView ivNavHeader;
     LinearLayout lvNavHeader;
-
     MainViewModel viewModel;
 
     @Override
@@ -68,7 +68,8 @@ implements NavigationView.OnNavigationItemSelectedListener {
     }
 
     private void observeViewModel(MainViewModel mainViewModel){
-        mainViewModel.getUserCredential().observe(this, response -> handleResponse(response));
+        mainViewModel.getUserCredentialObservable().observe(this, response -> handleResponse(response));
+        mainViewModel.getAccessTokenClearedObservable().observe(this, val -> finish());
     }
 
     @Override
@@ -96,7 +97,6 @@ implements NavigationView.OnNavigationItemSelectedListener {
         setDrawerViews();
     }
 
-
     private void setDrawerViews(){
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -121,7 +121,7 @@ implements NavigationView.OnNavigationItemSelectedListener {
     }
 
     private void setNavigationHeaderImage(User user){
-        Glide.with(MainActivity.this).load(user.getBannerUrl()).asBitmap().into(new SimpleTarget<Bitmap>(500, 500) {
+        Glide.with(MainActivity.this).load(user.getBannerUrl()).asBitmap().into(new SimpleTarget<Bitmap>(Consts.NAV_HEADER_WIDTH, Consts.NAV_HEADER_HEIGHT) {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                 Drawable drawable = new BitmapDrawable(resource);
@@ -131,7 +131,6 @@ implements NavigationView.OnNavigationItemSelectedListener {
             }
         });
     }
-
 
     @Override
     public void onBackPressed() {
@@ -148,7 +147,6 @@ implements NavigationView.OnNavigationItemSelectedListener {
         int id = item.getItemId();
         if (id == R.id.nav_sign_out) {
             viewModel.clearAccessTokens();
-            finish();
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;

@@ -69,9 +69,7 @@ public class TweetsFragment extends BaseFragment {
 
     @Override
     public void handleError(Response response){
-        Snackbar mySnackbar = Snackbar.make(getView().findViewById(R.id.root1),
-                getString(R.string.error_msg), Snackbar.LENGTH_SHORT);
-        mySnackbar.show();
+        showSnackBar(R.id.root1, getString(R.string.error_msg));
         avLoadingIndicatorView.hide();
         mSwipeRefreshLayout.setRefreshing(false);
     }

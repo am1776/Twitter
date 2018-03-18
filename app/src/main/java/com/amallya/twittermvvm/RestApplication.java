@@ -27,7 +27,7 @@ public class RestApplication extends Application {
     public static TwitterClient getRestClient() {
         return (TwitterClient) TwitterClient.getInstance(TwitterClient.class, RestApplication.context);
     }
-    
+
     public static User getUser() {
         return user;
     }

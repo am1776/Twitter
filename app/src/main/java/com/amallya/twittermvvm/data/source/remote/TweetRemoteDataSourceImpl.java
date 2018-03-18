@@ -73,8 +73,8 @@ public class TweetRemoteDataSourceImpl implements TweetRemoteDataSource<DataSour
     }
 
     @Override
-    public void takeActionOnTweet(final TweetUserAction tweetUserAction, Request request, final ResultCallBack callBack) {
-
+    public void takeActionOnTweet(Request request, final ResultCallBack callBack) {
+        TweetUserAction tweetUserAction = request.getTweetUserAction();
         JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
@@ -114,6 +114,7 @@ public class TweetRemoteDataSourceImpl implements TweetRemoteDataSource<DataSour
     @Override
     public void clearAccessToken(ResultCallBack callBack){
         client.clearAccessToken();
+        callBack.onResultObtained(new Response("Access token cleared", SUCCESS));
     }
 
     private ArrayList<Tweet> processTweetJson(JSONArray json){

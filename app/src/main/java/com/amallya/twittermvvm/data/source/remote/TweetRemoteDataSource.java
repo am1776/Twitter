@@ -13,7 +13,7 @@ public interface TweetRemoteDataSource<T extends DataSource.ResultCallBack> exte
 
     void getUserCred(T callBack);
 
-    void takeActionOnTweet(TweetUserAction tweetUserAction, Request request, T callBack);
+    void takeActionOnTweet(Request request, T callBack);
 
     void clearAccessToken(T callBack);
 

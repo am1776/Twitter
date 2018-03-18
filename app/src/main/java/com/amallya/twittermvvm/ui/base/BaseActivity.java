@@ -1,7 +1,9 @@
 package com.amallya.twittermvvm.ui.base;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 
+import com.amallya.twittermvvm.R;
 import com.amallya.twittermvvm.models.Response;
 import com.amallya.twittermvvm.models.User;
 
@@ -20,6 +22,12 @@ public abstract class BaseActivity  extends AppCompatActivity{
                 handleError(response);
                 break;
         }
+    }
+
+    protected void showSnackBar(int id, String msg){
+        Snackbar mySnackbar = Snackbar.make(findViewById(id),
+                msg, Snackbar.LENGTH_SHORT);
+        mySnackbar.show();
     }
 
     public abstract void handleSuccess(Response response);

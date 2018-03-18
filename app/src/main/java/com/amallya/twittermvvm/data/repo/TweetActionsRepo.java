@@ -22,8 +22,8 @@ import java.util.List;
 
 public class TweetActionsRepo extends BaseRepo{
 
-    private DataSource dataSource;
-    final SingleLiveEvent<Response<?>> tweetActionsObservable;
+    private final DataSource dataSource;
+    private final SingleLiveEvent<Response<?>> tweetActionsObservable;
 
     public TweetActionsRepo(DataSource dataSource){
         this.dataSource = dataSource;
@@ -35,15 +35,15 @@ public class TweetActionsRepo extends BaseRepo{
     }
 
     public void userActionOnTweet(final TweetUserAction tweetUserAction, long tweetId){
-        Request request = new Request();
-        request.setId(tweetId);
-        ((TweetRemoteDataSource)dataSource).takeActionOnTweet(tweetUserAction, request, response ->{});
+        Request request = Request.createRequest(tweetId, tweetUserAction);
+        ((TweetRemoteDataSource)dataSource).takeActionOnTweet(request, response ->{
+            if(response.getErrorCode() == Response.Status.ERROR){
+            tweetActionsObservable.setValue(response);
+        }});
     }
 
     public void userReplyOnTweet(TweetUserAction tweetUserAction, String tweetResponse, long tweetId){
-        Request request = new Request();
-        request.setId(tweetId);
-        request.setMessage(tweetResponse);
-        ((TweetRemoteDataSource)dataSource).takeActionOnTweet(tweetUserAction, request, response -> {});
+        Request request = Request.createRequest(tweetId, tweetUserAction, tweetResponse);
+        ((TweetRemoteDataSource)dataSource).takeActionOnTweet(request, response -> {tweetActionsObservable.setValue(response);});
     }
 }
