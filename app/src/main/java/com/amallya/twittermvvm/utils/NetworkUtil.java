@@ -31,5 +31,9 @@ public class NetworkUtil {
             }
             });
     }
+
+    public static boolean isConnected(){
+        return true;
+    }
 }
 

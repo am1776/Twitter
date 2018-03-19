@@ -10,6 +10,8 @@ import com.amallya.twittermvvm.data.source.local.TweetLocalDataSourceImpl;
 import com.amallya.twittermvvm.data.source.remote.TweetRemoteDataSourceImpl;
 import com.amallya.twittermvvm.models.Response;
 import com.amallya.twittermvvm.models.Tweet;
+import com.amallya.twittermvvm.utils.NetworkUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,11 +99,11 @@ public class TweetListRepo extends BaseRepo {
         }
     }
 
-    private  Tweet fetchSelectedTweet(int position){
+    private Tweet fetchSelectedTweet(int position){
         return tweetList.get(position);
     }
 
     private boolean isConnectedToInternet(){
-        return false;
+        return NetworkUtil.isConnected();
     }
 }
