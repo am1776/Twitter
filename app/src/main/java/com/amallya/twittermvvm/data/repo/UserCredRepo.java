@@ -45,12 +45,12 @@ public class UserCredRepo extends BaseRepo {
         return userCredObservable;
     }
 
-    public void fetchUserCred(){
-        ((TweetRemoteDataSource) dataSource).getUserCred(response -> userCredObservable.setValue(response));
-    }
-
     public LiveData<Boolean> getAccessTokenClearedObservable(){
         return isAccessTokenClearedObservable;
+    }
+
+    public void fetchUserCred(){
+        ((TweetRemoteDataSource) dataSource).getUserCred(response -> userCredObservable.setValue(response));
     }
 
     public void clearAccessTokens(){

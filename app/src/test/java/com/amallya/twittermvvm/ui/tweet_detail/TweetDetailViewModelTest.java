@@ -51,7 +51,7 @@ public class TweetDetailViewModelTest {
         TweetUserAction tweetUserAction = TweetUserAction.FAVORITE;
         String response = "TEST";
         viewModel.userReplyOnTweet(tweetUserAction, tweetId, response);
-        verify(tweetActionsRepo).userReplyOnTweet(tweetUserAction, response, tweetId);
+        verify(tweetActionsRepo).userReplyOnTweet(tweetUserAction, tweetId, response);
     }
 
 

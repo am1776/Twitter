@@ -41,7 +41,6 @@ public class TweetListRepo extends BaseRepo {
         return tweetListObservable;
     }
 
-
     public LiveData<Tweet> getSelectedTweetObservable(){
         return clickedTweetObservable;
     }

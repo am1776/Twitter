@@ -28,7 +28,7 @@ public class TweetDetailViewModel extends ViewModel{
     }
 
     public void userReplyOnTweet(TweetUserAction tweetUserAction, long tweetId, String tweetResponse){
-        tweetActionsRepo.userReplyOnTweet(tweetUserAction, tweetResponse, tweetId);
+        tweetActionsRepo.userReplyOnTweet(tweetUserAction, tweetId, tweetResponse);
     }
 
     public LiveData<Response<?>> getTweetsActionsObservable(){
