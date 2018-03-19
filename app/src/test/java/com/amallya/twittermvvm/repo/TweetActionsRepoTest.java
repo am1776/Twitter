@@ -63,26 +63,43 @@ public class TweetActionsRepoTest {
 
     @Test
     public void actionObservableisNotNull(){
+        // action Observable is not null
         Assert.assertNotNull(tweetActionsRepo.getTweetsActionObservable());
     }
 
     @Test
     public void userActionOnTweetSuccessTest(){
+
+        // when user takes a action on a tweet
         tweetActionsRepo.userActionOnTweet(TWEETUSERACTION, TWEETID);
+
+        // check whether takeActionOnTweet is called
         verify((TweetRemoteDataSource)dataSource).takeActionOnTweet(any(Request.class), callbackCaptor.capture());
+
+        // call the callback
         Response<String> actionResponse = new Response<>("MSG", Response.Status.SUCCESS);
         callbackCaptor.getValue().onResultObtained(actionResponse);
+
+        // Make sure livedata.set is not called
         assertFalse(tweetActionsRepo.getTweetsActionObservable().getValue() == actionResponse);
     }
 
     @Test
     public void userActionOnTweetFailureTest(){
         requestCaptor = ArgumentCaptor.forClass(Request.class);
+
+        // when user takes a action on a tweet
         tweetActionsRepo.userActionOnTweet(TWEETUSERACTION, TWEETID);
+
+        // check whether takeActionOnTweet is called
         verify((TweetRemoteDataSource)dataSource).takeActionOnTweet(requestCaptor.capture(), callbackCaptor.capture());
+
+        // verify that the Request arg is correct
         assertEquals(requestCaptor.getValue().getId(), TWEETID);
         assertEquals(requestCaptor.getValue().getTweetUserAction(), TWEETUSERACTION);
         Response<?> actionResponse = new Response<>("MSG", Response.Status.ERROR);
+
+        // verify that the observer is notified
         Observer<Response<?>> observer = mock(Observer.class);
         tweetActionsRepo.getTweetsActionObservable().observe(TestUtils.TEST_OBSERVER, observer);
         callbackCaptor.getValue().onResultObtained(actionResponse);
@@ -92,11 +109,19 @@ public class TweetActionsRepoTest {
     @Test
     public void userReplyOnTweetTest(){
         requestCaptor2 = ArgumentCaptor.forClass(Request.class);
+
+        // when user takes a action on a tweet
         tweetActionsRepo.userReplyOnTweet(TWEETUSERACTION, TWEETID, RESPONSE);
+
+        // check whether takeActionOnTweet is called
         verify((TweetRemoteDataSource)dataSource).takeActionOnTweet(requestCaptor2.capture(), callbackCaptor.capture());
+
+        // verify that the Request arg is correct
         assertEquals(requestCaptor2.getValue().getId(), TWEETID);
         assertEquals(requestCaptor2.getValue().getTweetUserAction(), TWEETUSERACTION);
         assertEquals(requestCaptor2.getValue().getMessage(), RESPONSE);
+
+        // verify that the observer is notified
         Response<String> actionResponse = new Response<>("MSG", Response.Status.ERROR);
         Observer<Response<?>> observer = mock(Observer.class);
         tweetActionsRepo.getTweetsActionObservable().observe(TestUtils.TEST_OBSERVER, observer);

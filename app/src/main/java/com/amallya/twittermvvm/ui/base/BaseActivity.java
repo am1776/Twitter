@@ -13,7 +13,7 @@ import com.amallya.twittermvvm.models.User;
 
 public abstract class BaseActivity  extends AppCompatActivity{
 
-    public void handleResponse(Response response){
+    protected void handleResponse(Response response){
         switch(response.getErrorCode()){
             case SUCCESS:
                 handleSuccess(response);

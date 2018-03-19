@@ -54,14 +54,6 @@ public class TweetListRepoTest {
     private TweetListRepo tweetListRepo;
     @Captor
     ArgumentCaptor<DataSource.ResultCallBack> callbackCaptor;
-    ArgumentCaptor<Request> requestCaptor;
-    ArgumentCaptor<Request> requestCaptor2;
-
-
-    private long TWEETID = 12;
-    private TweetUserAction TWEETUSERACTION = TweetUserAction.FAVORITE;
-    private String RESPONSE = "test";
-
 
     private List<Tweet> REMOTE_TWEET_LIST_1 = new ArrayList<>();
     private List<Tweet> REMOTE_TWEET_LIST_2 = new ArrayList<>();
@@ -78,6 +70,9 @@ public class TweetListRepoTest {
         tweetListRepo = new TweetListRepo(dataSourceLocal, dataSourceRemote);
     }
 
+    /*
+    Check observables are not null
+     */
     @Test
     public void getSelectedTweetsObservableisNotNull(){
         Assert.assertNotNull(tweetListRepo.getSelectedTweetObservable());
@@ -98,10 +93,10 @@ public class TweetListRepoTest {
     public void loadMoreTweetsRemoteTest(){
         ArgumentCaptor<List<Tweet>> requestCaptor = ArgumentCaptor.forClass(List.class);
 
-        // load more tweets
+        // when load more tweets is called
         tweetListRepo.loadMoreTweets();
 
-        // make sure datasource gets called
+        // Make sure datasource gets called
         verify((TweetRemoteDataSource)dataSourceRemote).getTweets(anyLong(), callbackCaptor.capture());
 
         // mock callback
@@ -109,7 +104,7 @@ public class TweetListRepoTest {
         actionResponse.setData(REMOTE_TWEET_LIST_1);
         callbackCaptor.getValue().onResultObtained(actionResponse);
 
-         //check update database gets called
+         // verify update database gets called
         verify((TweetLocalDataSource)dataSourceLocal).insertTweets(requestCaptor.capture(), any());
         assertEquals(requestCaptor.getValue(), REMOTE_TWEET_LIST_1);
 
@@ -121,27 +116,45 @@ public class TweetListRepoTest {
 
     @Test
     public void loadMoreTweetsRemoteListSuccessTest(){
+
+        // when load more tweets is called
         tweetListRepo.loadMoreTweets();
+
+        // verify getTweets is called
         verify((TweetRemoteDataSource)dataSourceRemote).getTweets(anyLong(), callbackCaptor.capture());
+
+        // Trigger callback
         Response<List<Tweet>> actionResponse = new Response<>("MSG", Response.Status.SUCCESS);
         REMOTE_TWEET_LIST_1.add(t1);
         actionResponse.setData(REMOTE_TWEET_LIST_1);
         callbackCaptor.getValue().onResultObtained(actionResponse);
+
+        // Check the List size is accurate
         assertEquals(actionResponse.getData().size(), 1);
 
+        // Load somemore tweets
         tweetListRepo.loadMoreTweets();
+
+        // verify getTweets is alled
         verify((TweetRemoteDataSource)dataSourceRemote, atLeast(2)).getTweets(anyLong(), callbackCaptor.capture());
+
+        // Trigger callback
         Response<List<Tweet>> actionResponse2 = new Response<>("MSG", Response.Status.SUCCESS);
         REMOTE_TWEET_LIST_2.add(t2); REMOTE_TWEET_LIST_2.add(t3);
         actionResponse2.setData(REMOTE_TWEET_LIST_2);
         callbackCaptor.getValue().onResultObtained(actionResponse2);
+
+        // check the list size is accurate
         assertEquals(actionResponse2.getData().size(), 3);
     }
 
     @Test
     public void loadMoreTweetsRemoteListErrorTest(){
 
+        // when load more tweets is called
         tweetListRepo.loadMoreTweets();
+
+        // verify getTweets is called
         verify((TweetRemoteDataSource)dataSourceRemote).getTweets(anyLong(), callbackCaptor.capture());
         Response<List<Tweet>> actionResponse = new Response<>("MSG", Response.Status.SUCCESS);
         REMOTE_TWEET_LIST_1.add(t1);
@@ -149,17 +162,24 @@ public class TweetListRepoTest {
         callbackCaptor.getValue().onResultObtained(actionResponse);
         assertEquals(actionResponse.getData().size(), 1);
 
+        // Load some more tweets
         tweetListRepo.loadMoreTweets();
+
+        // Trigger error callback
         verify((TweetRemoteDataSource)dataSourceRemote, atLeast(2)).getTweets(anyLong(), callbackCaptor.capture());
         Response<List<Tweet>> actionResponse2 = new Response<>("MSG", Response.Status.ERROR);
         REMOTE_TWEET_LIST_2.add(t2); REMOTE_TWEET_LIST_2.add(t3);
         actionResponse2.setData(REMOTE_TWEET_LIST_2);
         callbackCaptor.getValue().onResultObtained(actionResponse2);
+
+        // Make sure the arraylist is not updated.
         assertNotEquals(actionResponse2.getData().size(), 3);
     }
 
     @Test
     public void refreshTweetsTest(){
+
+        // when load more tweets is called
         tweetListRepo.loadMoreTweets();
         verify((TweetRemoteDataSource)dataSourceRemote).getTweets(anyLong(), callbackCaptor.capture());
         Response<List<Tweet>> actionResponse = new Response<>("MSG", Response.Status.SUCCESS);
@@ -167,6 +187,7 @@ public class TweetListRepoTest {
         actionResponse.setData(REMOTE_TWEET_LIST_1);
         callbackCaptor.getValue().onResultObtained(actionResponse);
 
+        // call refresh tweets
         tweetListRepo.refreshTweets();
 
         verify((TweetRemoteDataSource)dataSourceRemote, atLeast(1)).getTweets(anyLong(), callbackCaptor.capture());
@@ -174,8 +195,11 @@ public class TweetListRepoTest {
         REMOTE_TWEET_LIST_2.add(t2);
         actionResponse.setData(REMOTE_TWEET_LIST_2);
         callbackCaptor.getValue().onResultObtained(actionResponse);
+
+        // Verify list size. ie the list size is reset on refresh
         assertEquals(actionResponse.getData().size(), 1);
 
+        // Make sure that the refreshingObservable is called
         Observer<Boolean> observer = mock(Observer.class);
         tweetListRepo.getRefreshingObservable().observe(TestUtils.TEST_OBSERVER, observer);
         verify(observer).onChanged(true);
@@ -184,6 +208,7 @@ public class TweetListRepoTest {
     @Test
     public void selectedTweetTest(){
 
+        // Load more tweets
         tweetListRepo.loadMoreTweets();
         verify((TweetRemoteDataSource)dataSourceRemote).getTweets(anyLong(), callbackCaptor.capture());
         Response<List<Tweet>> actionResponse = new Response<>("MSG", Response.Status.SUCCESS);
@@ -193,8 +218,10 @@ public class TweetListRepoTest {
         actionResponse.setData(REMOTE_TWEET_LIST_1);
         callbackCaptor.getValue().onResultObtained(actionResponse);
 
+        // Select a tweet
         tweetListRepo.onTweetClicked(2);
 
+        // Make sure the observer is notified by passing the right tweet.
         Observer<Tweet> observer = mock(Observer.class);
         tweetListRepo.getSelectedTweetObservable().observe(TestUtils.TEST_OBSERVER, observer);
         verify(observer).onChanged(t3);

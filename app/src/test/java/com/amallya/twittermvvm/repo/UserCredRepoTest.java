@@ -62,8 +62,14 @@ public class UserCredRepoTest {
 
     @Test
     public void fetchUserCredTest(){
+
+        // when fetch user cred is called
         userCredRepo.fetchUserCred();
+
+        //verify getUserCred is called
         verify((TweetRemoteDataSource)dataSource).getUserCred(callbackCaptor.capture());
+
+        // verify observer is notified
         Observer<Response<User>> observer = mock(Observer.class);
         userCredRepo.getUserCredObservable().observe(TestUtils.TEST_OBSERVER, observer);
         callbackCaptor.getValue().onResultObtained(actionResponse);
@@ -72,8 +78,14 @@ public class UserCredRepoTest {
 
     @Test
     public void clearUserAccessTokenTest(){
+
+        // when clear access token is called
         userCredRepo.clearAccessTokens();
+
+        // verify clear accessToken is called
         verify((TweetRemoteDataSource)dataSource).clearAccessToken(callbackCaptor.capture());
+
+        // verify observer is notified
         Observer<Boolean> observer = mock(Observer.class);
         userCredRepo.getAccessTokenClearedObservable().observe(TestUtils.TEST_OBSERVER, observer);
         callbackCaptor.getValue().onResultObtained(actionResponse);
