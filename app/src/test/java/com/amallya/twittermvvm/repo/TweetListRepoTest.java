@@ -189,13 +189,14 @@ public class TweetListRepoTest {
         Response<List<Tweet>> actionResponse = new Response<>("MSG", Response.Status.SUCCESS);
         REMOTE_TWEET_LIST_1.add(t1);
         REMOTE_TWEET_LIST_1.add(t2);
+        REMOTE_TWEET_LIST_1.add(t3);
         actionResponse.setData(REMOTE_TWEET_LIST_1);
         callbackCaptor.getValue().onResultObtained(actionResponse);
 
-        tweetListRepo.onTweetClicked(1);
+        tweetListRepo.onTweetClicked(2);
 
         Observer<Tweet> observer = mock(Observer.class);
         tweetListRepo.getSelectedTweetObservable().observe(TestUtils.TEST_OBSERVER, observer);
-        verify(observer).onChanged(t2);
+        verify(observer).onChanged(t3);
     }
 }
