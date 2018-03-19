@@ -30,8 +30,6 @@ repositories {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
-def dbflow_version = "3.1.1"
-
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -56,4 +54,13 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:$rootProject.roomVersion"
     compile "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
     annotationProcessor "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
+
+    // Test helpers for LiveData
+    testImplementation "android.arch.core:core-testing:1.1.0"
+
+    // Test helpers for Room
+    testImplementation "android.arch.persistence.room:testing:1.0.0"
+
+    testCompile 'org.mockito:mockito-core:2.6.3'
+    androidTestCompile 'org.mockito:mockito-android:2.6.3'
 }
