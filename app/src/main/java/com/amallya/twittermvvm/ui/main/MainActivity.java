@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.amallya.twittermvvm.BuildConfig;
 import com.amallya.twittermvvm.ViewModelFactory;
 import com.amallya.twittermvvm.models.Response;
 import com.amallya.twittermvvm.models.Tweet;
@@ -31,6 +32,7 @@ import com.amallya.twittermvvm.utils.CircularTransform;
 import com.amallya.twittermvvm.R;
 import com.amallya.twittermvvm.models.User;
 import com.amallya.twittermvvm.utils.Consts;
+import com.amplitude.api.Amplitude;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -40,6 +42,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.amallya.twittermvvm.utils.analytics.Events.USER_VISITED;
 
 
 public class MainActivity extends BaseActivity
@@ -65,6 +69,8 @@ implements NavigationView.OnNavigationItemSelectedListener {
         viewModel =
                 ViewModelProviders.of(this, factory).get(MainViewModel.class);
         observeViewModel(viewModel);
+        Amplitude.getInstance().initialize(this, BuildConfig.AMPLITUDE_TOKEN).enableForegroundTracking(getApplication());
+        Amplitude.getInstance().logEvent(USER_VISITED);
     }
 
     private void observeViewModel(MainViewModel mainViewModel){

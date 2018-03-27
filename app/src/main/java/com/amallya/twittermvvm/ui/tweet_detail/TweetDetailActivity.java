@@ -26,6 +26,7 @@ import com.amallya.twittermvvm.ui.main.MainViewModel;
 import com.amallya.twittermvvm.ui.tweets.TweetUserAction;
 import com.amallya.twittermvvm.utils.Consts;
 import com.amallya.twittermvvm.utils.Utils;
+import com.amplitude.api.Amplitude;
 import com.bumptech.glide.Glide;
 
 import org.parceler.Parcels;
@@ -33,6 +34,8 @@ import org.parceler.Parcels;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
+import static com.amallya.twittermvvm.utils.analytics.Events.TWEET_DETAIL_CLICKED;
 
 public class TweetDetailActivity extends BaseActivity {
 
@@ -68,6 +71,8 @@ public class TweetDetailActivity extends BaseActivity {
         setupToolbar();
         tweet = Parcels.unwrap(getIntent().getParcelableExtra(TWEET_EXTRA));
         setupViews(tweet);
+        Amplitude.getInstance().logEvent(TWEET_DETAIL_CLICKED);
+
     }
 
     private void setupViewModel(){

@@ -19,10 +19,13 @@ import com.amallya.twittermvvm.utils.ItemClickSupport;
 import com.amallya.twittermvvm.R;
 import com.amallya.twittermvvm.ui.tweet_detail.TweetDetailActivity;
 import com.amallya.twittermvvm.models.Tweet;
+import com.amplitude.api.Amplitude;
 import com.wang.avi.AVLoadingIndicatorView;
 import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.amallya.twittermvvm.utils.analytics.Events.TWEET_LIST_DISPLAYED;
 
 
 public class TweetsFragment extends BaseFragment {
@@ -78,6 +81,7 @@ public class TweetsFragment extends BaseFragment {
         viewModel =
                 ViewModelProviders.of(this, factory).get(TweetViewModel.class);
         observeViewModels();
+        Amplitude.getInstance().logEvent(TWEET_LIST_DISPLAYED);
     }
 
     @Override

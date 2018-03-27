@@ -18,6 +18,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    buildTypes.each {
+        it.buildConfigField 'String', 'AMPLITUDE_TOKEN', amplitudeToken
+        it.buildConfigField 'String', 'TWITTER_CLIENT_SECRET', twitterClientSecret
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -66,4 +72,8 @@ dependencies {
 
     testCompile 'org.mockito:mockito-core:2.6.3'
     androidTestCompile 'org.mockito:mockito-android:2.6.3'
+
+    compile 'com.amplitude:android-sdk:2.16.0'
+
+    compile 'com.amplitude:android-sdk:2.16.0'
 }

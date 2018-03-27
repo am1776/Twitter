@@ -2,6 +2,7 @@ package com.amallya.twittermvvm.data.source.remote;
 
 import android.content.Context;
 
+import com.amallya.twittermvvm.BuildConfig;
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -21,7 +22,7 @@ public class TwitterClient extends OAuthBaseClient {
 
     public static final String REST_CALLBACK_URL = "oauth://codepathtweets";
     public static final String REST_CONSUMER_KEY = "ztpNiAun5Ne8h6KW7V7amIwDS";
-    public static final String REST_CONSUMER_SECRET = "RCtQ5isUnd66tEwo0cxRSYhcxWCOMqUyiy4FuCzXyyOqD167i4";
+    public static final String REST_CONSUMER_SECRET = BuildConfig.TWITTER_CLIENT_SECRET;
 
     public TwitterClient(Context context) {
         super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);

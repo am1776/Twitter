@@ -12,6 +12,8 @@ import com.amallya.twittermvvm.data.source.remote.TwitterClient;
 import com.amallya.twittermvvm.models.Response;
 import com.amallya.twittermvvm.models.Tweet;
 import com.amallya.twittermvvm.models.User;
+import com.amallya.twittermvvm.utils.analytics.Events;
+import com.amplitude.api.Amplitude;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -54,6 +56,8 @@ public class UserCredRepo extends BaseRepo {
     }
 
     public void clearAccessTokens(){
+        Amplitude.getInstance().logEvent(Events.SIGN_OUT_CLICKED);
+
         ((TweetRemoteDataSource) dataSource).clearAccessToken(response -> {
             isAccessTokenClearedObservable.setValue(true);
         });

@@ -9,6 +9,10 @@ import com.amallya.twittermvvm.data.source.remote.TweetRemoteDataSource;
 import com.amallya.twittermvvm.models.Request;
 import com.amallya.twittermvvm.models.Response;
 import com.amallya.twittermvvm.ui.tweets.TweetUserAction;
+import com.amplitude.api.Amplitude;
+
+import static com.amallya.twittermvvm.utils.analytics.Events.ACTION_CLICKED;
+import static com.amallya.twittermvvm.utils.analytics.Events.REPLY_CLICKED;
 
 
 /**
@@ -30,6 +34,8 @@ public class TweetActionsRepo extends BaseRepo{
     }
 
     public void userActionOnTweet(final TweetUserAction tweetUserAction, long tweetId){
+        Amplitude.getInstance().logEvent(ACTION_CLICKED);
+
         Request request = Request.createRequest(tweetId, tweetUserAction);
         ((TweetRemoteDataSource)dataSource).takeActionOnTweet(request, response ->{
             if(response.getErrorCode() == Response.Status.ERROR){
@@ -38,6 +44,8 @@ public class TweetActionsRepo extends BaseRepo{
     }
 
     public void userReplyOnTweet(TweetUserAction tweetUserAction, long tweetId, String tweetResponse){
+        Amplitude.getInstance().logEvent(REPLY_CLICKED);
+
         Request request = Request.createRequest(tweetId, tweetUserAction, tweetResponse);
         ((TweetRemoteDataSource)dataSource).takeActionOnTweet(request, response -> {tweetActionsObservable.setValue(response);});
     }
